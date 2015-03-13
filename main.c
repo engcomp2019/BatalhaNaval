@@ -1,7 +1,9 @@
 #include "config.h"
 
 int main(){
- 
-    teste();   
+    
+    // Chama a função teste
+    teste();
+    
     getch();
 }
