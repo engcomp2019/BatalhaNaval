@@ -24,7 +24,6 @@ void game_timer(void);
 
 BITMAP *buffer;
 
-
 //Função Main
 int main(){
 
