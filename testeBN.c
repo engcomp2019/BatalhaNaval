@@ -109,9 +109,9 @@ int gameLoop(void){
 
   buffer=create_bitmap(800,600);
   
-  BITMAP *explosion = load_bitmap("ImagensBatalhaNaval/Explosions.bmp", NULL);
-  BITMAP *wallPaper = load_bitmap("ImagensBatalhaNaval/wallPaper.bmp",NULL);
-  BITMAP *mouseMira = load_bitmap("ImagensBatalhaNaval/mira.bmp",NULL);
+  BITMAP *explosion = load_bitmap("imagens/Explosions.bmp", NULL);
+  BITMAP *wallPaper = load_bitmap("imagens/wallPaper.bmp",NULL);
+  BITMAP *mouseMira = load_bitmap("imagens/mira.bmp",NULL);
   
   //Explosão
   int explosionInicialX      = 0;                 //Valor inicial de X para a explosão utilizada
