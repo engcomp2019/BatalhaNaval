@@ -39,7 +39,6 @@ int main(){
   closing();
   
   return 0;
-  
 }
 END_OF_MAIN();
 
