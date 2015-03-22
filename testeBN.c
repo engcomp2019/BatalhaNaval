@@ -1,5 +1,6 @@
 //Bibliotecas
 #include <allegro.h>
+#include <alpng.h>
 #include <time.h>
 
 //Defines
@@ -54,6 +55,8 @@ int begin(void)
 
   allegro_init();
   
+  alpng_init();
+  
   install_keyboard();
   
   install_mouse();
@@ -64,7 +67,9 @@ int begin(void)
   
   srand((unsigned)time(NULL));
 
+  //set_alpha_blender();
   set_color_depth(COLOR_BITS);
+  
   if (set_gfx_mode(VIDEO_CARD, MAX_X, MAX_Y, V_MAX_X, V_MAX_Y) < 0)
   {
     if (set_gfx_mode(GFX_AUTODETECT, MAX_X, MAX_Y, V_MAX_X, V_MAX_Y) < 0)
@@ -84,6 +89,8 @@ int begin(void)
       return (FALSE);
     }
   }
+  
+   set_window_title((char *)"Batalha Naval");
 
   return (TRUE);
 }
@@ -107,17 +114,19 @@ int gameLoop(void){
 
   buffer=create_bitmap(800,600);
   
-  BITMAP *explosion = load_bitmap("imagens/Explosions.bmp", NULL);
-  BITMAP *wallPaper = load_bitmap("imagens/wallPaper.bmp",NULL);
-  BITMAP *mouseMira = load_bitmap("imagens/mira.bmp",NULL);
+  //BITMAP *explosion = load_bitmap("imagens/old/Explosions.bmp", NULL);
+  PALETTE plt1;
+  BITMAP *explosion = load_bitmap("imagens/sprites/explosao.bmp", plt1);
+  BITMAP *wallPaper = load_bitmap("imagens/old/wallPaper.bmp",NULL);
+  BITMAP *mouseMira = load_bitmap("imagens/old/mira.bmp",NULL);
   
   //Explosão
   int explosionInicialX      = 0;                 //Valor inicial de X para a explosão utilizada
-  int explosionInicialY      = 256;               //Valor inicial de Y para a explosão utilizada
-  int explosionImgLargura    = 512;               //Largura da imagem
-  int explosionImgAltura     = 448;               //Altura da imagem
-  int explosionQuadroLargura = 64;                //Largura do quadro a ser desenhado na tela
-  int explosionQuadroAltura  = 64;                //Altura do quadro a ser desenhado na tela
+  int explosionInicialY      = 0;               //Valor inicial de Y para a explosão utilizada
+  int explosionImgLargura    = 2870;              //Largura da imagem
+  int explosionImgAltura     = 70;                //Altura da imagem
+  int explosionQuadroLargura = 70;                //Largura do quadro a ser desenhado na tela
+  int explosionQuadroAltura  = 70;                //Altura do quadro a ser desenhado na tela
   int explosionImgX          = explosionInicialX; //Posição X inicial da imagem, altera a cada quadro desenhado.
   int explosionImgY          = explosionInicialY; //Posição Y inicial da imagem, altera a cada quadro desenhado
   int explosionX             = 0;                 //Valor de X em que explosão irá aparecer na tela
@@ -162,7 +171,8 @@ int gameLoop(void){
           flagAtiva == 1){
         
         masked_blit(explosion,buffer,explosionImgX,explosionImgY,explosionX,explosionY,explosionQuadroAltura,explosionQuadroLargura);
-        
+        //draw_trans_sprite(buffer, explosion, explosionInicialX, explosionInicialY);
+
         explosionImgX = explosionImgX + explosionQuadroLargura;
       }
       else if(explosionImgY <= (explosionImgAltura) &&
@@ -182,9 +192,8 @@ int gameLoop(void){
     
       /*Desenha mouse na tela com imagem de mira*/
       masked_blit(mouseMira, buffer, 94, 0, mouse_x-(miraQuadroLargura/2), mouse_y-(miraQuadroAltura/2), miraQuadroAltura, miraQuadroLargura);
-           
-      blit(buffer,screen,0,0,0,0,800,600);
       
+      blit(buffer,screen,0,0,0,0,800,600);
       vel_control = counter + 1;
     }
   }
