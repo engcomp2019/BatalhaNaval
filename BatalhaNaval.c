@@ -5,7 +5,7 @@
 #include <string.h>
 
 // Cabeçalhos
-#include "header.h"
+#include "main.h"
 
 // Variaveis
 volatile int speed = 0;           // Recebe o valor incremental da velocidade do jogo
