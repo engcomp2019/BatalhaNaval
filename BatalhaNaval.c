@@ -1,6 +1,7 @@
 // Bibliotecas
 #include <allegro.h>
 #include <alpng.h>
+#include <almp3.h>
 #include <time.h>
 #include <string.h>
 
@@ -29,7 +30,7 @@ void gameInstructions();
 BITMAP *buffer;
 BITMAP *animaExplosao[FPS_EXPLOSAO];
 BITMAP *animaFogo[FPS_FOGO];
-
+SAMPLE *somMar;
 
 /*#############################################################################################
   Função Responsavel por controlar a velocidade do jogo.
@@ -59,6 +60,10 @@ int main(){
   while(gameState != GAME_STATE_FINISH){
      //if(gamestate == GAME_STATE_INTRO) gameIntro();
      if(gameState == GAME_STATE_IN_GAME) gameLoop();
+     
+     somMar = load_sample("sons/ambient_loop.wav");
+     play_sample(somMar,255,128, 1000, FALSE);
+     
      /*if(gamestate == GAME_STATE_GAMEOVER) gameOver();
      if(gamestate == GAME_STATE_INSTRUCTIONS) gameInstructions();*/
   } // fim do loop do jogo
@@ -142,7 +147,9 @@ int begin(void)
 
   if (COLOR_BITS == 32) set_alpha_blender(); // instala o canal alpha (funciona apenas em 32 bits)
 
-  if (install_sound(DIGI_CARD, MIDI_CARD, NULL) < 0)
+
+
+  if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) < 0)
   {
     if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) < 0)
     {
@@ -165,6 +172,7 @@ int begin(void)
 int gameLoop(){
 
   buffer = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+ 
   
   // Fundos de Tela
   BITMAP *fundoAgua = load_bitmap("imagens/estaticos/agua.png",NULL);
@@ -184,6 +192,8 @@ int gameLoop(){
   BITMAP *ilhaSuperiorDireita = load_bitmap("imagens/estaticos/ilhas/top_right.png",NULL);
   BITMAP *ilhaInferiorEsquerda = load_bitmap("imagens/estaticos/ilhas/bottom_left.png",NULL);
   
+  
+    
    // Tamanho do cursor do mouse
   int cursorMouseLargura = 28; //Largura do quadro a ser desenhado na tela
   int cursorMouseAltura  = 39; //Altura do quadro a ser desenhado na tela
@@ -198,7 +208,9 @@ int gameLoop(){
   //Variavies de controle de tempo de execução.
   long int vel_control  = 0;
   int aguaMovimentoX = 0, 
-         flagMaxX = 0;
+      aguaMovimentoMin = 0,
+      aguaMovimentoMax = (38 * 5),
+      flagMaxX = 0;
          
   LOCK_VARIABLE(speed);
   LOCK_FUNCTION(game_speed);
@@ -208,27 +220,32 @@ int gameLoop(){
 
     clear(buffer);
     blit(fundoAgua, buffer,0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
-
-     /*
-      aguaMovimentoX = 38 * 5
-     */
-     if(aguaMovimentoX == 190 && flagMaxX == 0){
-          flagMaxX = 1;
-     }
-     else if(aguaMovimentoX == 0 && flagMaxX == 1){
-          flagMaxX = 0;
-     }
-     
-     if(aguaMovimentoX < 190 && flagMaxX == 0){
-        aguaMovimentoX++;
-     }
-     else if(aguaMovimentoX > 0 && flagMaxX == 1){
-         aguaMovimentoX--; 
-     }
     
+    
+    
+    if(aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0){
+        
 
+        if(aguaMovimentoX == aguaMovimentoMax){
+          flagMaxX = 1;
+        }
+        
+         aguaMovimentoX++;
+        
+     }
+     else if(aguaMovimentoX >= aguaMovimentoMin && flagMaxX == 1){
+                  
+         if(aguaMovimentoX == aguaMovimentoMin){
+           flagMaxX = 0;
+         }
+         
+         aguaMovimentoX--; 
+         
+     }
+
+    
     draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX/5),0);
-
+    
     
     draw_trans_sprite(buffer,ilhaSuperiorEsquerda,0,0);
     draw_trans_sprite(buffer,ilhaSuperiorDireita,525,0);
@@ -236,6 +253,7 @@ int gameLoop(){
     draw_trans_sprite(buffer,rodapeOpcoes,0,458);
     draw_trans_sprite(buffer,gradeTabuleiro,20,60);
     
+    textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "Movimento X: %d", aguaMovimentoX);
 
 
     if(speed >= vel_control){    
