@@ -1,38 +1,49 @@
-//Bibliotecas
+// Bibliotecas
 #include <allegro.h>
 #include <alpng.h>
 #include <time.h>
 #include <string.h>
 
-//Defines
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
-#define V_SCREEN_X 0
-#define V_SCREEN_Y 0
-#define COLOR_BITS 32
-#define VIDEO_CARD GFX_AUTODETECT_WINDOWED
-#define DIGI_CARD DIGI_AUTODETECT
-#define MIDI_CARD MIDI_AUTODETECT
-#define VELOCIDADEJOGO  50
+// Cabeçalhos
+#include "header.h"
 
-#define FRAMES_EXPLOSAO 41
-#define FRAMES_FOGO 26
+// Variaveis
+volatile int speed = 0;           // Recebe o valor incremental da velocidade do jogo
+int gamestate = GAME_STATE_IN_GAME; // Recebe o estado inicial do jogo
 
-//FunÃ§Ãµes Extras
+
+//Funções Extras
 int begin(void); 
 void closing(void); 
-int gameLoop(void); 
-void carregaBitmap(BITMAP *imagem[], char *pasta, int *frames);
-void DestruirBitmap(BITMAP *imagem[],int *frames);
+void loadBitmap(BITMAP *imagem[], char *pasta, int frames);
+void destroyBitmap(BITMAP *imagem[],int frames);
 void alpng_init(void);
-volatile long int counter = 0;
-void game_timer(void);
+void game_speed();
+
+// Funções das telas do jogo
+void gameIntro();
+int gameLoop();
+void gameOver();
+void gameInstructions();
 
 BITMAP *buffer;
 BITMAP *animaExplosao[FRAMES_EXPLOSAO];
 BITMAP *animaFogo[FRAMES_FOGO];
 
-//FunÃ§Ã£o Main
+
+/*#############################################################################################
+  Função Responsavel por controlar a velocidade do jogo.
+###############################################################################################*/
+
+void game_speed(){
+
+   speed++;
+  
+}
+END_OF_FUNCTION(game_speed);
+
+
+//Função Main
 int main(){
 
   if(!begin()){
@@ -40,14 +51,61 @@ int main(){
     closing();
     return 0;
   }
-  
-  gameLoop();
-  
+  /*gameLoop();
   closing();
+  return 0;*/
   
+  // inicia loop do jogo
+  while(gamestate != GAME_STATE_FINISH){
+     //if(gamestate == GAME_STATE_INTRO) gameIntro();
+     if(gamestate == GAME_STATE_IN_GAME) gameLoop();
+     /*if(gamestate == GAME_STATE_GAMEOVER) gameOver();
+     if(gamestate == GAME_STATE_INSTRUCTIONS) gameInstructions();*/
+  } // fim do loop do jogo
+ 
+  // remove buffer da memória
+  destroy_bitmap(buffer);
+  
+  
+  // Encerra
+  closing();
   return 0;
+  
 }
 END_OF_MAIN();
+
+// Tela Inicial
+void gameIntro(){
+     
+     BITMAP *intro_screen = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+     
+     while (gamestate == GAME_STATE_INTRO) {
+           
+           textprintf_ex(buffer, font, 0,  0, makecol(255,255,255), -1, "Inicio");
+           blit(intro_screen, buffer, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+           blit(buffer, screen, 0,0, 0,0, SCREEN_WIDTH,SCREEN_HEIGHT);
+           
+     }
+     
+     return;
+}
+
+// Tela de Instruções
+void gameInstructions() {
+     while(gamestate == GAME_STATE_INSTRUCTIONS) {
+        if(key[KEY_ESC]) 
+           gamestate = GAME_STATE_INTRO;
+     }
+}
+
+// Tela de GameOver
+void gameOver() {
+     while(gamestate == GAME_STATE_GAMEOVER) {
+        if(key[KEY_ESC]) 
+           gamestate = GAME_STATE_INTRO;
+     }
+}
 
 /*******************************************************************************************************************
                                                 Corpo das funÃ§Ãµes
@@ -66,11 +124,11 @@ int begin(void)
   install_keyboard();
   install_mouse();
   install_timer();
-  install_int(game_timer, VELOCIDADEJOGO);
+  install_int(game_speed, MAX_FPS);
   
   srand((unsigned)time(NULL));
 
-  set_alpha_blender();
+  //set_alpha_blender();
   set_color_depth(COLOR_BITS);
   
   if (set_gfx_mode(VIDEO_CARD, SCREEN_WIDTH, SCREEN_HEIGHT, V_SCREEN_X, V_SCREEN_Y) < 0)
@@ -98,22 +156,13 @@ int begin(void)
   return (TRUE);
 }
 
-/*#############################################################################################
-  FunÃ§Ãµes Responsaveis por criar uma variaveis  temporizadas.
-###############################################################################################*/
 
-void game_timer(void){
-
-   counter++;
-  
-}
-END_OF_FUNCTION(game_timer);
 
 /*#############################################################################################
   - LoopDoJogo : Loop principal do jogo.
 ###############################################################################################*/
 
-int gameLoop(void){
+int gameLoop(){
 
   buffer = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
   
@@ -134,8 +183,6 @@ int gameLoop(void){
   BITMAP *ilhaSuperiorDireita = load_bitmap("imagens/estaticos/ilhas/top_right.png",NULL);
   BITMAP *ilhaInferiorEsquerda = load_bitmap("imagens/estaticos/ilhas/bottom_left.png",NULL);
   
-  
-  
    // Tamanho do cursor do mouse
   int cursorMouseLargura = 28; //Largura do quadro a ser desenhado na tela
   int cursorMouseAltura  = 39; //Altura do quadro a ser desenhado na tela
@@ -144,14 +191,14 @@ int gameLoop(void){
   int LocalExplosaoX = 0, LocalExplosaoY = 0;
   
 
-  carregaBitmap(animaExplosao, "sprites/explosao", FRAMES_EXPLOSAO);
-  carregaBitmap(animaFogo, "sprites/fogo", FRAMES_FOGO);
+  loadBitmap(animaExplosao, "sprites/explosao", FRAMES_EXPLOSAO);
+  loadBitmap(animaFogo, "sprites/fogo", FRAMES_FOGO);
   
   //Variavies de controle de tempo de execução.
   long int vel_control  = 0;
   
-  LOCK_VARIABLE(counter);
-  LOCK_FUNCTION(game_timer);
+  LOCK_VARIABLE(speed);
+  LOCK_FUNCTION(game_speed);
 
   //While principal
   while (!key[KEY_ESC]){
@@ -168,7 +215,7 @@ int gameLoop(void){
     
 
 
-    if(counter >= vel_control){
+    if(speed >= vel_control){
     
       textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, "Mouse X: %d", mouse_x);
       textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Mouse Y: %d", mouse_y);
@@ -212,7 +259,7 @@ int gameLoop(void){
       draw_trans_sprite(buffer, cursorMouse, mouse_x-(cursorMouseLargura/2), mouse_y-(cursorMouseAltura/2));
         
       blit(buffer, screen, 0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
-      vel_control =  counter + 1;
+      vel_control =  speed + 1;
     }
 
 
@@ -222,10 +269,10 @@ int gameLoop(void){
 }
 
 /*#############################################################################################
-  - carregaBitmap : Responsavel por carregar na memoria as imagens da pasta informada.
+  - loadBitmap : Responsavel por carregar na memoria as imagens da pasta informada.
 ###############################################################################################*/
 
-void carregaBitmap(BITMAP *imagem[], char *pasta, int *frames){
+void loadBitmap(BITMAP *imagem[], char *pasta, int frames){
      
      int i;
      char caminho[100];
@@ -239,10 +286,10 @@ void carregaBitmap(BITMAP *imagem[], char *pasta, int *frames){
 }
 
 /*#############################################################################################
-  - DestruirBitmap : Responsavel por apagar da memoria o Bitmap informado.
+  - destroyBitmap : Responsavel por apagar da memoria o Bitmap informado.
 ###############################################################################################*/
 
-void DestruirBitmap(BITMAP *imagem[],int *frames){
+void destroyBitmap(BITMAP *imagem[], int frames){
      
      int i;
               
