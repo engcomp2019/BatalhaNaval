@@ -13,8 +13,9 @@
 
 #define MAX_FPS  50
 
-#define FRAMES_EXPLOSAO 41
-#define FRAMES_FOGO 26
+#define FPS_EXPLOSAO 41
+#define FPS_FOGO 26
+#define FPS_AGUA 80
 
 // Define dos estados das telas
 #define GAME_STATE_INTRO 0

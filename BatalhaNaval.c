@@ -9,7 +9,7 @@
 
 // Variaveis
 volatile int speed = 0;           // Recebe o valor incremental da velocidade do jogo
-int gamestate = GAME_STATE_IN_GAME; // Recebe o estado inicial do jogo
+int gameState = GAME_STATE_IN_GAME; // Recebe o estado inicial do jogo
 
 
 //Funções Extras
@@ -27,8 +27,8 @@ void gameOver();
 void gameInstructions();
 
 BITMAP *buffer;
-BITMAP *animaExplosao[FRAMES_EXPLOSAO];
-BITMAP *animaFogo[FRAMES_FOGO];
+BITMAP *animaExplosao[FPS_EXPLOSAO];
+BITMAP *animaFogo[FPS_FOGO];
 
 
 /*#############################################################################################
@@ -56,9 +56,9 @@ int main(){
   return 0;*/
   
   // inicia loop do jogo
-  while(gamestate != GAME_STATE_FINISH){
+  while(gameState != GAME_STATE_FINISH){
      //if(gamestate == GAME_STATE_INTRO) gameIntro();
-     if(gamestate == GAME_STATE_IN_GAME) gameLoop();
+     if(gameState == GAME_STATE_IN_GAME) gameLoop();
      /*if(gamestate == GAME_STATE_GAMEOVER) gameOver();
      if(gamestate == GAME_STATE_INSTRUCTIONS) gameInstructions();*/
   } // fim do loop do jogo
@@ -79,7 +79,7 @@ void gameIntro(){
      
      BITMAP *intro_screen = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
      
-     while (gamestate == GAME_STATE_INTRO) {
+     while (gameState == GAME_STATE_INTRO) {
            
            textprintf_ex(buffer, font, 0,  0, makecol(255,255,255), -1, "Inicio");
            blit(intro_screen, buffer, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -93,17 +93,17 @@ void gameIntro(){
 
 // Tela de Instruções
 void gameInstructions() {
-     while(gamestate == GAME_STATE_INSTRUCTIONS) {
+     while(gameState == GAME_STATE_INSTRUCTIONS) {
         if(key[KEY_ESC]) 
-           gamestate = GAME_STATE_INTRO;
+           gameState = GAME_STATE_INTRO;
      }
 }
 
 // Tela de GameOver
 void gameOver() {
-     while(gamestate == GAME_STATE_GAMEOVER) {
+     while(gameState == GAME_STATE_GAMEOVER) {
         if(key[KEY_ESC]) 
-           gamestate = GAME_STATE_INTRO;
+           gameState = GAME_STATE_INTRO;
      }
 }
 
@@ -168,6 +168,7 @@ int gameLoop(){
   
   // Fundos de Tela
   BITMAP *fundoAgua = load_bitmap("imagens/estaticos/agua.png",NULL);
+  BITMAP *moveAgua = load_bitmap("imagens/estaticos/agua_2.png",NULL);
   
   // Rodapé
   BITMAP *rodapeOpcoes = load_bitmap("imagens/estaticos/rodape.png",NULL);
@@ -191,12 +192,14 @@ int gameLoop(){
   int LocalExplosaoX = 0, LocalExplosaoY = 0;
   
 
-  loadBitmap(animaExplosao, "sprites/explosao", FRAMES_EXPLOSAO);
-  loadBitmap(animaFogo, "sprites/fogo", FRAMES_FOGO);
+  loadBitmap(animaExplosao, "sprites/explosao", FPS_EXPLOSAO);
+  loadBitmap(animaFogo, "sprites/fogo", FPS_FOGO);
   
   //Variavies de controle de tempo de execução.
   long int vel_control  = 0;
-  
+  int aguaMovimentoX = 0, 
+         flagMaxX = 0;
+         
   LOCK_VARIABLE(speed);
   LOCK_FUNCTION(game_speed);
 
@@ -205,7 +208,27 @@ int gameLoop(){
 
     clear(buffer);
     blit(fundoAgua, buffer,0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
+
+     /*
+      aguaMovimentoX = 38 * 5
+     */
+     if(aguaMovimentoX == 190 && flagMaxX == 0){
+          flagMaxX = 1;
+     }
+     else if(aguaMovimentoX == 0 && flagMaxX == 1){
+          flagMaxX = 0;
+     }
+     
+     if(aguaMovimentoX < 190 && flagMaxX == 0){
+        aguaMovimentoX++;
+     }
+     else if(aguaMovimentoX > 0 && flagMaxX == 1){
+         aguaMovimentoX--; 
+     }
     
+
+    draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX/5),0);
+
     
     draw_trans_sprite(buffer,ilhaSuperiorEsquerda,0,0);
     draw_trans_sprite(buffer,ilhaSuperiorDireita,525,0);
@@ -215,7 +238,7 @@ int gameLoop(){
     
 
 
-    if(speed >= vel_control){
+    if(speed >= vel_control){    
     
       textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, "Mouse X: %d", mouse_x);
       textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Mouse Y: %d", mouse_y);
@@ -228,12 +251,12 @@ int gameLoop(){
 
       }   
 
-      if(countExplosao < FRAMES_EXPLOSAO && ativaExplosao == 1){
+      if(countExplosao < FPS_EXPLOSAO && ativaExplosao == 1){
                       
         draw_trans_sprite(buffer, animaExplosao[countExplosao], LocalExplosaoX, LocalExplosaoY);
         countExplosao ++;
         
-        if(countExplosao == (FRAMES_EXPLOSAO -1) ){
+        if(countExplosao == (FPS_EXPLOSAO -1) ){
 
           countExplosao  = 0;
           ativaExplosao  = 0;
@@ -242,7 +265,7 @@ int gameLoop(){
         }
       }
 
-      if(countFogo < FRAMES_FOGO && ativaFogo == 1 ){
+      if(countFogo < FPS_FOGO && ativaFogo == 1 ){
        
 
         draw_trans_sprite(buffer, animaFogo[countFogo], LocalExplosaoX, LocalExplosaoY);
