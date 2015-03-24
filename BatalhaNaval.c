@@ -1,7 +1,7 @@
 // Bibliotecas
 #include <allegro.h>
 #include <alpng.h>
-#include <almp3.h>
+
 #include <time.h>
 #include <string.h>
 
@@ -209,7 +209,7 @@ int gameLoop(){
   long int vel_control  = 0;
   int aguaMovimentoX = 0, 
       aguaMovimentoMin = 0,
-      aguaMovimentoMax = (38 * 5),
+      aguaMovimentoMax = (38 * 7),
       flagMaxX = 0;
          
   LOCK_VARIABLE(speed);
@@ -244,7 +244,7 @@ int gameLoop(){
      }
 
     
-    draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX/5),0);
+    draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX/7),0);
     
     
     draw_trans_sprite(buffer,ilhaSuperiorEsquerda,0,0);
