@@ -191,8 +191,7 @@ int gameLoop(){
   BITMAP *ilhaSuperiorEsquerda = load_bitmap("imagens/estaticos/ilhas/top_left.png",NULL);
   BITMAP *ilhaSuperiorDireita = load_bitmap("imagens/estaticos/ilhas/top_right.png",NULL);
   BITMAP *ilhaInferiorEsquerda = load_bitmap("imagens/estaticos/ilhas/bottom_left.png",NULL);
-  
-  
+  BITMAP *ilhaInferiorDireita = load_bitmap("imagens/estaticos/ilhas/bottom_right.png",NULL);
     
    // Tamanho do cursor do mouse
   int cursorMouseLargura = 28; //Largura do quadro a ser desenhado na tela
@@ -200,7 +199,6 @@ int gameLoop(){
   int countExplosao = 0, countFogo  = 0;
   int ativaExplosao = 0, ativaFogo  = 0;
   int LocalExplosaoX = 0, LocalExplosaoY = 0;
-  
 
   loadBitmap(animaExplosao, "sprites/explosao", FPS_EXPLOSAO);
   loadBitmap(animaFogo, "sprites/fogo", FPS_FOGO);
@@ -250,6 +248,8 @@ int gameLoop(){
     draw_trans_sprite(buffer,ilhaSuperiorEsquerda,0,0);
     draw_trans_sprite(buffer,ilhaSuperiorDireita,525,0);
     draw_trans_sprite(buffer,ilhaInferiorEsquerda,0,395);
+    draw_trans_sprite(buffer,ilhaInferiorDireita,515,375);
+    
     draw_trans_sprite(buffer,rodapeOpcoes,0,458);
     draw_trans_sprite(buffer,gradeTabuleiro,20,60);
     
