@@ -1,6 +1,7 @@
 // Bibliotecas
 #include <allegro.h>
 #include <alpng.h>
+#include <fmod.h>
 
 #include <time.h>
 #include <string.h>
@@ -9,7 +10,7 @@
 #include "main.h"
 
 // Variaveis
-volatile int speed = 0;           // Recebe o valor incremental da velocidade do jogo
+volatile int speed = 0;             // Recebe o valor incremental da velocidade do jogo
 int gameState = GAME_STATE_IN_GAME; // Recebe o estado inicial do jogo
 
 
@@ -19,6 +20,8 @@ void closing(void);
 void loadBitmap(BITMAP *imagem[], char *pasta, int frames);
 void destroyBitmap(BITMAP *imagem[],int frames);
 void alpng_init(void);
+//void carregaSom(FMUSIC_MODULE *arquivo);
+
 void game_speed();
 
 // Funções das telas do jogo
@@ -30,11 +33,36 @@ void gameInstructions();
 BITMAP *buffer;
 BITMAP *animaExplosao[FPS_EXPLOSAO];
 BITMAP *animaFogo[FPS_FOGO];
-SAMPLE *somMar;
+
 
 /*#############################################################################################
   Função Responsavel por controlar a velocidade do jogo.
 ###############################################################################################*/
+
+/*void carregaSom(FMUSIC_MODULE *arquivo){
+     
+   // Inicia FMOD
+   FSOUND_Init (44100, 32, 0);
+
+   // Carrega o áudio
+   som = FMUSIC_LoadSong (arquivo);
+   
+   MUSIC_SetLooping(som, false);
+
+   // Reproduz o áudio
+   FMUSIC_PlaySong(som);
+   
+   // Aguarda o usuário apertar alguma tecla para finalizar
+   while (!_kbhit())
+   {
+   }
+   
+   // Fecha e limpa 
+   FMUSIC_FreeSong(som;
+   FSOUND_Close();  
+
+     
+}*/
 
 void game_speed(){
 
@@ -61,8 +89,7 @@ int main(){
      //if(gamestate == GAME_STATE_INTRO) gameIntro();
      if(gameState == GAME_STATE_IN_GAME) gameLoop();
      
-     somMar = load_sample("sons/ambient_loop.wav");
-     play_sample(somMar,255,128, 1000, FALSE);
+     //carregaSom("sons/ambient_loop.mp3");
      
      /*if(gamestate == GAME_STATE_GAMEOVER) gameOver();
      if(gamestate == GAME_STATE_INSTRUCTIONS) gameInstructions();*/
@@ -206,8 +233,9 @@ int gameLoop(){
   //Variavies de controle de tempo de execução.
   long int vel_control  = 0;
   int aguaMovimentoX = 0, 
+      aguaMovimentoFator = 3,
       aguaMovimentoMin = 0,
-      aguaMovimentoMax = (38 * 7),
+      aguaMovimentoMax = (38 * aguaMovimentoFator),
       flagMaxX = 0;
          
   LOCK_VARIABLE(speed);
@@ -242,7 +270,7 @@ int gameLoop(){
      }
 
     
-    draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX/7),0);
+    draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX / aguaMovimentoFator),0);
     
     
     draw_trans_sprite(buffer,ilhaSuperiorEsquerda,0,0);
