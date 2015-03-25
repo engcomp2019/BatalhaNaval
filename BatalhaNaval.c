@@ -1,8 +1,6 @@
 // Bibliotecas
 #include <allegro.h>
 #include <alpng.h>
-#include <fmod.h>
-
 #include <time.h>
 #include <string.h>
 
@@ -10,23 +8,24 @@
 #include "main.h"
 
 // Variaveis
-volatile int speed = 0;             // Recebe o valor incremental da velocidade do jogo
-int gameState = GAME_STATE_IN_GAME; // Recebe o estado inicial do jogo
+volatile int speed     = 0;                  // Recebe o valor incremental da velocidade do jogo
+         int gameState = GAME_STATE_IN_GAME; // Recebe o estado inicial do jogo
 
 
 //Funções Extras
-int begin(void); 
+int  begin(void); 
 void closing(void); 
 void loadBitmap(BITMAP *imagem[], char *pasta, int frames);
 void destroyBitmap(BITMAP *imagem[],int frames);
 void alpng_init(void);
+
 //void carregaSom(FMUSIC_MODULE *arquivo);
 
-void game_speed();
+void gameSpeed();
 
 // Funções das telas do jogo
 void gameIntro();
-int gameLoop();
+int  gameLoop();
 void gameOver();
 void gameInstructions();
 
@@ -39,37 +38,12 @@ BITMAP *animaFogo[FPS_FOGO];
   Função Responsavel por controlar a velocidade do jogo.
 ###############################################################################################*/
 
-/*void carregaSom(FMUSIC_MODULE *arquivo){
-     
-   // Inicia FMOD
-   FSOUND_Init (44100, 32, 0);
-
-   // Carrega o áudio
-   som = FMUSIC_LoadSong (arquivo);
-   
-   MUSIC_SetLooping(som, false);
-
-   // Reproduz o áudio
-   FMUSIC_PlaySong(som);
-   
-   // Aguarda o usuário apertar alguma tecla para finalizar
-   while (!_kbhit())
-   {
-   }
-   
-   // Fecha e limpa 
-   FMUSIC_FreeSong(som;
-   FSOUND_Close();  
-
-     
-}*/
-
-void game_speed(){
+void gameSpeed(){
 
    speed++;
   
 }
-END_OF_FUNCTION(game_speed);
+END_OF_FUNCTION(gameSpeed);
 
 
 //Função Main
@@ -79,6 +53,7 @@ int main(){
   
     closing();
     return 0;
+    
   }
   /*gameLoop();
   closing();
@@ -86,17 +61,13 @@ int main(){
   
   // inicia loop do jogo
   while(gameState != GAME_STATE_FINISH){
-     //if(gamestate == GAME_STATE_INTRO) gameIntro();
+     
      if(gameState == GAME_STATE_IN_GAME) gameLoop();
      
-     //carregaSom("sons/ambient_loop.mp3");
-     
-     /*if(gamestate == GAME_STATE_GAMEOVER) gameOver();
-     if(gamestate == GAME_STATE_INSTRUCTIONS) gameInstructions();*/
   } // fim do loop do jogo
  
   // remove buffer da memória
-  destroy_bitmap(buffer);
+  destroyBitmap(buffer);
   
   
   // Encerra
@@ -109,12 +80,12 @@ END_OF_MAIN();
 // Tela Inicial
 void gameIntro(){
      
-     BITMAP *intro_screen = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+     BITMAP *introScreen = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
      
      while (gameState == GAME_STATE_INTRO) {
            
            textprintf_ex(buffer, font, 0,  0, makecol(255,255,255), -1, "Inicio");
-           blit(intro_screen, buffer, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+           blit(introScreen, buffer, 0, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
            blit(buffer, screen, 0,0, 0,0, SCREEN_WIDTH,SCREEN_HEIGHT);
            
@@ -156,7 +127,7 @@ int begin(void)
   install_keyboard();
   install_mouse();
   install_timer();
-  install_int(game_speed, MAX_FPS);
+  install_int(gameSpeed, MAX_FPS);
   
   srand((unsigned)time(NULL));
 
@@ -202,45 +173,50 @@ int gameLoop(){
  
   
   // Fundos de Tela
-  BITMAP *fundoAgua = load_bitmap("imagens/estaticos/agua.png",NULL);
-  BITMAP *moveAgua = load_bitmap("imagens/estaticos/agua_2.png",NULL);
+  BITMAP *fundoAgua      = load_bitmap("imagens/estaticos/agua.png",NULL);
+  BITMAP *moveAgua       = load_bitmap("imagens/estaticos/agua_2.png",NULL);
   
   // Rodapé
-  BITMAP *rodapeOpcoes = load_bitmap("imagens/estaticos/rodape.png",NULL);
+  BITMAP *rodapeOpcoes   = load_bitmap("imagens/estaticos/rodape.png",NULL);
   
   // Tabuleiro
   BITMAP *gradeTabuleiro = load_bitmap("imagens/estaticos/tabuleiro.png",NULL);
   
   // Cursor do Mouse
-  BITMAP *cursorMouse = load_bitmap("imagens/estaticos/mouse.png",NULL);
+  BITMAP *cursorMouse    = load_bitmap("imagens/estaticos/mouse.png",NULL);
   
   //Ilhas
   BITMAP *ilhaSuperiorEsquerda = load_bitmap("imagens/estaticos/ilhas/top_left.png",NULL);
-  BITMAP *ilhaSuperiorDireita = load_bitmap("imagens/estaticos/ilhas/top_right.png",NULL);
+  BITMAP *ilhaSuperiorDireita  = load_bitmap("imagens/estaticos/ilhas/top_right.png",NULL);
   BITMAP *ilhaInferiorEsquerda = load_bitmap("imagens/estaticos/ilhas/bottom_left.png",NULL);
-  BITMAP *ilhaInferiorDireita = load_bitmap("imagens/estaticos/ilhas/bottom_right.png",NULL);
+  BITMAP *ilhaInferiorDireita  = load_bitmap("imagens/estaticos/ilhas/bottom_right.png",NULL);
     
    // Tamanho do cursor do mouse
-  int cursorMouseLargura = 28; //Largura do quadro a ser desenhado na tela
-  int cursorMouseAltura  = 39; //Altura do quadro a ser desenhado na tela
-  int countExplosao = 0, countFogo  = 0;
-  int ativaExplosao = 0, ativaFogo  = 0;
-  int LocalExplosaoX = 0, LocalExplosaoY = 0;
+  int cursorMouseLargura = 28, //Largura do quadro a ser desenhado na tela
+      cursorMouseAltura  = 39, //Altura do quadro a ser desenhado na tela
+      countExplosao      = 0,  
+      countFogo          = 0,
+      ativaExplosao      = 0, 
+      ativaFogo          = 0,
+      LocalExplosaoX     = 0, 
+      LocalExplosaoY     = 0;
 
   loadBitmap(animaExplosao, "sprites/explosao", FPS_EXPLOSAO);
   loadBitmap(animaFogo, "sprites/fogo", FPS_FOGO);
   
   //Variavies de controle de tempo de execução.
-  long int vel_control  = 0;
-  int aguaMovimentoX = 0, 
+  long int vel_control   = 0;
+  int aguaMovimentoX     = 0, 
       aguaMovimentoFator = 3,
-      aguaMovimentoMin = 0,
-      aguaMovimentoMax = (38 * aguaMovimentoFator),
-      flagMaxX = 0;
+      aguaMovimentoMin   = 0,
+      aguaMovimentoMax   = (38 * aguaMovimentoFator),
+      flagMaxX           = 0;
+         
          
   LOCK_VARIABLE(speed);
-  LOCK_FUNCTION(game_speed);
+  LOCK_FUNCTION(gameSpeed);
 
+  
   //While principal
   while (!key[KEY_ESC]){
 
@@ -291,7 +267,7 @@ int gameLoop(){
           
       if(mouse_b & 1 && ativaExplosao == 0){
 
-        ativaExplosao = 1;
+        ativaExplosao  = 1;
         LocalExplosaoX = mouse_x;
         LocalExplosaoY = mouse_y;
 
@@ -317,9 +293,11 @@ int gameLoop(){
         draw_trans_sprite(buffer, animaFogo[countFogo], LocalExplosaoX, LocalExplosaoY);
         countFogo ++;
       
-          if(countFogo == 25){
-            countFogo = 0;
-            ativaExplosao = 0;      
+          if(countFogo == 25){ 
+          
+            countFogo     = 0;
+            ativaExplosao = 0;     
+            
           }
       }
 
@@ -328,6 +306,7 @@ int gameLoop(){
       draw_trans_sprite(buffer, cursorMouse, mouse_x-(cursorMouseLargura/2), mouse_y-(cursorMouseAltura/2));
         
       blit(buffer, screen, 0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
+      
       vel_control =  speed + 1;
     }
 
@@ -364,7 +343,7 @@ void destroyBitmap(BITMAP *imagem[], int frames){
               
      for(i=0; i < frames; i++){
 
-       destroy_bitmap(imagem[i]);
+       destroyBitmap(imagem[i]);
       
      }
 
