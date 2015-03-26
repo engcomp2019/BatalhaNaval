@@ -197,8 +197,10 @@ int gameLoop(){
       cursorMouseAltura  = 39, //Altura do quadro a ser desenhado na tela
       countExplosao      = 0,  
       countFogo          = 0,
+      countAgua          = 0,
       ativaExplosao      = 0, 
       ativaFogo          = 0,
+      ativaAgua          = 0,
       LocalExplosaoX     = 0, 
       LocalExplosaoY     = 0;
 
@@ -209,7 +211,7 @@ int gameLoop(){
   //Variavies de controle de tempo de execução.
   long int vel_control   = 0;
   int aguaMovimentoX     = 0, 
-      aguaMovimentoFator = 3,
+      aguaMovimentoFator = 7,
       aguaMovimentoMin   = 0,
       aguaMovimentoMax   = (38 * aguaMovimentoFator),
       flagMaxX           = 0;
@@ -308,13 +310,21 @@ int gameLoop(){
       textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, "Mouse X: %d", mouse_x);
       textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Mouse Y: %d", mouse_y);
           
-      if(mouse_b & 1 && ativaExplosao == 0){
+      /*if(mouse_b & 1 && ativaExplosao == 0){
 
         ativaExplosao  = 1;
         LocalExplosaoX = mouse_x;
         LocalExplosaoY = mouse_y;
 
-      }   
+      }   */
+      
+      if(mouse_b & 1 && ativaAgua == 0){
+
+        ativaAgua  = 1;
+        LocalExplosaoX = mouse_x;
+        LocalExplosaoY = mouse_y;
+
+      }
 
       if(countExplosao < FPS_EXPLOSAO && ativaExplosao == 1){
                       
@@ -328,6 +338,20 @@ int gameLoop(){
           ativaFogo      = 1;
 
         }
+      }
+      
+      if(countAgua < FPS_TIRO_AGUA && ativaAgua == 1){
+                      
+        draw_trans_sprite(buffer, animaTiroAgua[countAgua], LocalExplosaoX, LocalExplosaoY);
+        countAgua ++;
+        
+        if(countAgua == (FPS_TIRO_AGUA -1) ){
+
+          countAgua  = 0;
+          ativaAgua  = 0;
+
+        }
+
       }
 
       if(countFogo < FPS_FOGO && ativaFogo == 1 ){
