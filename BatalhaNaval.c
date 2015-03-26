@@ -32,6 +32,7 @@ void gameInstructions();
 BITMAP *buffer;
 BITMAP *animaExplosao[FPS_EXPLOSAO];
 BITMAP *animaFogo[FPS_FOGO];
+BITMAP *animaTiroAgua[FPS_TIRO_AGUA];
 
 
 /*#############################################################################################
@@ -67,7 +68,7 @@ int main(){
   } // fim do loop do jogo
  
   // remove buffer da memória
-  destroyBitmap(buffer);
+//  destroyBitmap(buffer);
   
   
   // Encerra
@@ -203,6 +204,7 @@ int gameLoop(){
 
   loadBitmap(animaExplosao, "sprites/explosao", FPS_EXPLOSAO);
   loadBitmap(animaFogo, "sprites/fogo", FPS_FOGO);
+  loadBitmap(animaTiroAgua, "sprites/agua", FPS_TIRO_AGUA );
   
   //Variavies de controle de tempo de execução.
   long int vel_control   = 0;
@@ -217,6 +219,47 @@ int gameLoop(){
   LOCK_FUNCTION(gameSpeed);
 
   
+  //Teste para gerar struct para tratar eventos do tabuleiro
+  //##############################################################################################
+  typedef struct TRATAEVENTOS {
+	  
+	  int  xCentro,
+	       yCentro,
+		   xInicio,
+	       yInicio,
+	       xFinal,
+		   yFinal;
+
+	  char temNavio,
+	       explosaoAtivo,
+	       fogoAtivo,
+	       navioDestruido; 
+	  
+	} trataEventos;
+	 
+	trataEventos gameTabuleiro[100];
+
+	gameTabuleiro[0].xCentro        = 52 ;
+	gameTabuleiro[0].yCentro        = 214;
+	//gameTabuleiro[0].xInicio        = 52;
+	//gameTabuleiro[0].xFinal         = 214;
+	//gameTabuleiro[0].yInicio        = 214;
+	//gameTabuleiro[0].yFinal         = 214;
+	gameTabuleiro[0].temNavio       = 'n';
+	gameTabuleiro[0].fogoAtivo      = 'n';
+	gameTabuleiro[0].explosaoAtivo  = 'n';
+	gameTabuleiro[0].navioDestruido = 'n';
+
+	gameTabuleiro[1] = gameTabuleiro[0];
+
+	gameTabuleiro[1].temNavio = 's';
+	gameTabuleiro[1].xCentro  = 79;
+	gameTabuleiro[1].yCentro  = 198;
+	//gameTabuleiro[1].xInicio  = 52 ;
+	//gameTabuleiro[1].xFinal   = 214;
+	//gameTabuleiro[1].yInicio  = 214;
+	//gameTabuleiro[1].yFinal   = 214;
+
   //While principal
   while (!key[KEY_ESC]){
 
@@ -227,7 +270,7 @@ int gameLoop(){
     
     if(aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0){
         
-
+        
         if(aguaMovimentoX == aguaMovimentoMax){
           flagMaxX = 1;
         }
@@ -236,7 +279,7 @@ int gameLoop(){
         
      }
      else if(aguaMovimentoX >= aguaMovimentoMin && flagMaxX == 1){
-                  
+                
          if(aguaMovimentoX == aguaMovimentoMin){
            flagMaxX = 0;
          }
@@ -302,8 +345,8 @@ int gameLoop(){
       }
 
       
-      /*Desenha mouse na tela com imagem de mira*/
-      draw_trans_sprite(buffer, cursorMouse, mouse_x-(cursorMouseLargura/2), mouse_y-(cursorMouseAltura/2));
+      /*Desenha mouse na tela com imagem*/
+      draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
         
       blit(buffer, screen, 0,0,0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
       
@@ -336,7 +379,7 @@ void loadBitmap(BITMAP *imagem[], char *pasta, int frames){
 /*#############################################################################################
   - destroyBitmap : Responsavel por apagar da memoria o Bitmap informado.
 ###############################################################################################*/
-
+/*
 void destroyBitmap(BITMAP *imagem[], int frames){
      
      int i;
@@ -348,7 +391,7 @@ void destroyBitmap(BITMAP *imagem[], int frames){
      }
 
 }
-
+*/
 /*#############################################################################################
   - closing : Responsavel pelas rotinas de fechamento do jogo..
 ###############################################################################################*/

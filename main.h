@@ -16,6 +16,7 @@
 #define FPS_EXPLOSAO 41
 #define FPS_FOGO 26
 #define FPS_AGUA 80
+#define FPS_TIRO_AGUA 42
 
 // Define dos estados das telas
 #define GAME_STATE_INTRO 0
