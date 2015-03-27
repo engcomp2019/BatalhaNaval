@@ -2,8 +2,12 @@ int i;
 
 for (i = 0;i < 100; i ++){
   
-  if (mouse_x >= gameTabuleiro[i].xInicio && mouse_x <= gameTabuleiro[i].xFinal) && 
-    (mouse_y >= gameTabuleiro[i].yInicio && mouse_y <= gameTabuleiro[i].yFinal ){
+  if ( (mouse_x >= gameTabuleiro[i].x1 && mouse_x <= gameTabuleiro[i].x23) &&
+         ((mouse_y >= gameTabuleiro[i].y14 && mouse_y <= gameTabuleiro[i].y3) ||
+           (mouse_y <= gameTabuleiro[i].y14 && mouse_y >= gameTabuleiro[i].y2)) ) ||
+            ( (mouse_x >= gameTabuleiro[i].x4 && mouse_x <= gameTabuleiro[i].x23) &&
+               ((mouse_y >= gameTabuleiro[i].y14 && mouse_y <= gameTabuleiro[i].y3) ||
+                 (mouse_y <= gameTabuleiro[i].y14 && mouse_y >= gameTabuleiro[i].y3)) ){
     
     //TODO Trocar imagem do quadro para "brilhar"
     
@@ -36,3 +40,4 @@ for (i = 0;i < 100; i ++){
   }
   
 }
+

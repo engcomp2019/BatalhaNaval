@@ -227,26 +227,52 @@ int gameLoop(){
 	  
 	  int  xCentro,
 	       yCentro,
-		   xInicio,
-	       yInicio,
-	       xFinal,
-		   yFinal;
+		     posX1,
+	       posX23,
+		     posX4,
+         posY14,
+         posY2,
+         posY3;
+         
 
-	  char temNavio,
-	       explosaoAtivo,
-	       fogoAtivo,
-	       navioDestruido; 
+	  char indice[4];
+    char temNavio,
+         explosaoAtivo,
+         fogoAtivo,
+         navioDestruido,
+         adversario;
 	  
 	} trataEventos;
-	 
+   //FIM Struct
+   
+  //##############################################################################################
+  
+  //Atribuição de Valores para o vetor de struct 
 	trataEventos gameTabuleiro[100];
 
+  int i;
+  
+  for(i=0;i < 100; i++){
+  
+    gameTabuleiro[i].posX1   = 0;
+    gameTabuleiro[i].posX23  = 0;
+    gameTabuleiro[i].posX4   = 0;
+    gameTabuleiro[i].posY14  = 0;
+    gameTabuleiro[i].posY2   = 0;
+    gameTabuleiro[i].posY3   = 0;
+  
+  }
+  
+  
 	gameTabuleiro[0].xCentro        = 52 ;
 	gameTabuleiro[0].yCentro        = 214;
-	//gameTabuleiro[0].xInicio        = 52;
-	//gameTabuleiro[0].xFinal         = 214;
-	//gameTabuleiro[0].yInicio        = 214;
-	//gameTabuleiro[0].yFinal         = 214;
+  gameTabuleiro[0].posX1          = 28;
+	gameTabuleiro[0].posX23         = 55;
+	gameTabuleiro[0].posX4          = 79;
+  gameTabuleiro[0].posY14         = 215;
+  gameTabuleiro[0].posY2          = 200;
+  gameTabuleiro[0].posY3          = 229;
+  strcpy( gameTabuleiro[0].indice, "a1");
 	gameTabuleiro[0].temNavio       = 'n';
 	gameTabuleiro[0].fogoAtivo      = 'n';
 	gameTabuleiro[0].explosaoAtivo  = 'n';
@@ -254,14 +280,21 @@ int gameLoop(){
 
 	gameTabuleiro[1] = gameTabuleiro[0];
 
+  strcpy( gameTabuleiro[1].indice, "a2");
 	gameTabuleiro[1].temNavio = 's';
 	gameTabuleiro[1].xCentro  = 79;
 	gameTabuleiro[1].yCentro  = 198;
-	//gameTabuleiro[1].xInicio  = 52 ;
-	//gameTabuleiro[1].xFinal   = 214;
-	//gameTabuleiro[1].yInicio  = 214;
-	//gameTabuleiro[1].yFinal   = 214;
-
+  gameTabuleiro[1].posX1    = 58;
+	gameTabuleiro[1].posX23   = 80;
+	gameTabuleiro[1].posX4    = 102;
+  gameTabuleiro[1].posY14   = 200;
+  gameTabuleiro[1].posY2    = 187;
+  gameTabuleiro[1].posY3    = 210;
+  
+  
+  //FIM de atribuição de valores
+  //TODO For para atribuir esses valores de forma automatica. 
+  //##############################################################################################
   //While principal
   while (!key[KEY_ESC]){
 
@@ -318,11 +351,61 @@ int gameLoop(){
 
       }   */
       
+      /*#############################################################################################################*/
+      /*Teste de posicionamento do mouse                                                                             */
+      /*#############################################################################################################*/
+
+      for (i = 0;i < 100; i ++){
+        
+        if ( ((mouse_x >= gameTabuleiro[i].posX1 && mouse_x <= gameTabuleiro[i].posX23) &&
+               ((mouse_y >= gameTabuleiro[i].posY14 && mouse_y <= gameTabuleiro[i].posY3) ||
+                 (mouse_y <= gameTabuleiro[i].posY14 && mouse_y >= gameTabuleiro[i].posY2))) ||
+                 
+                  ((mouse_x <= gameTabuleiro[i].posX4 && mouse_x >= gameTabuleiro[i].posX23) &&
+                    ((mouse_y >= gameTabuleiro[i].posY14 && mouse_y <= gameTabuleiro[i].posY3) ||
+                      (mouse_y <= gameTabuleiro[i].posY14 && mouse_y >= gameTabuleiro[i].posY3))) ){
+          
+          //TODO Trocar imagem do quadro para "brilhar"
+          
+          textprintf_ex( buffer, font, 10, 40, makecol(255,0,0), -1, "Voce esta na posicao: %s", gameTabuleiro[i].indice);
+          
+          if(gameTabuleiro[i].adversario == 's'){
+            
+            //TODO Trocar Mouse
+            
+            if(mouse_b & 1){
+          
+              if(gameTabuleiro[i].temNavio == 'n'){
+                
+                //TODO tiro na agua recebendo posição X e Y do centro 
+                
+              }
+              else if(gameTabuleiro[i].temNavio == 's' && gameTabuleiro[i].fogoAtivo == 'n'){
+                
+                //TODO Tiro no navio recebendo posição X e Y do centro 
+                
+              }
+              else if(gameTabuleiro[i].temNavio == 's' && gameTabuleiro[i].fogoAtivo == 's'){
+              
+                //TODO Bloquear mouse -- Trocar imagem
+              
+              }
+          
+            }
+            
+          } 
+
+        }
+        
+      }
+
+
+      /*#############################################################################################################*/
       if(mouse_b & 1 && ativaAgua == 0){
 
         ativaAgua  = 1;
-        LocalExplosaoX = mouse_x;
-        LocalExplosaoY = mouse_y;
+        LocalExplosaoX = mouse_x - 34; //Largura dividido por dois
+        LocalExplosaoY = mouse_y - 60; //altura total
 
       }
 
