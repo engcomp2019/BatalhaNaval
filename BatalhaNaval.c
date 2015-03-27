@@ -264,9 +264,9 @@ int gameLoop(){
   }
   
   
-	gameTabuleiro[0].xCentro        = 52 ;
-	gameTabuleiro[0].yCentro        = 214;
-  gameTabuleiro[0].posX1          = 28;
+	gameTabuleiro[0].xCentro        = 53 ;
+	gameTabuleiro[0].yCentro        = 215;
+  gameTabuleiro[0].posX1          = 38;
 	gameTabuleiro[0].posX23         = 55;
 	gameTabuleiro[0].posX4          = 79;
   gameTabuleiro[0].posY14         = 215;
@@ -327,13 +327,13 @@ int gameLoop(){
     draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX / aguaMovimentoFator),0);
     
     
-    draw_trans_sprite(buffer,ilhaSuperiorEsquerda,0,0);
+    draw_trans_sprite(buffer,ilhaSuperiorEsquerda,0,-30);
     draw_trans_sprite(buffer,ilhaSuperiorDireita,525,0);
     draw_trans_sprite(buffer,ilhaInferiorEsquerda,0,395);
     draw_trans_sprite(buffer,ilhaInferiorDireita,515,375);
     
     draw_trans_sprite(buffer,rodapeOpcoes,0,458);
-    draw_trans_sprite(buffer,gradeTabuleiro,20,60);
+    draw_trans_sprite(buffer,gradeTabuleiro,30,40);
     
     textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "Movimento X: %d", aguaMovimentoX);
 
