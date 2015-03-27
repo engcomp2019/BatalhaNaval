@@ -327,7 +327,7 @@ int gameLoop(){
     draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX / aguaMovimentoFator),0);
     
     
-    draw_trans_sprite(buffer,ilhaSuperiorEsquerda,0,-30);
+    draw_trans_sprite(buffer,ilhaSuperiorEsquerda,-40,0);
     draw_trans_sprite(buffer,ilhaSuperiorDireita,525,0);
     draw_trans_sprite(buffer,ilhaInferiorEsquerda,0,395);
     draw_trans_sprite(buffer,ilhaInferiorDireita,515,375);
