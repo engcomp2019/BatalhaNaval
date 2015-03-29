@@ -88,10 +88,6 @@ int main(){
         while(velocidade > 0) {
                
               clear(buffer);
-
-              // Desenha mouse na tela com imagem
-              draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
-
               blit(fundoAgua, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
 
               if(aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0){
@@ -130,6 +126,9 @@ int main(){
         
         // Exibe o contador de frames na tela
         textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, " FPS: %i " , totalFps);
+        
+        // Desenha mouse na tela com imagem
+        draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
 
         // Copia todo o conteudo desenhado no buffer para a tela.
         blit(buffer, screen, 0, 0, 0, 0, JANELA_LARGURA, JANELA_ALTURA);
