@@ -15,9 +15,11 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
+#include <fmod.h>
 
 // Variaveis Globais
-BITMAP *buffer;
+BITMAP  *buffer;
+FSOUND_STREAM  *som;
 
 #include "definicoes.h"
 
@@ -41,6 +43,9 @@ void Inicializa();
 void Finaliza();
 void VelocidadeJogo();
 void CalculaFPS();
+void IniciaSom();
+void FinalizaSom();
+ int CarregaSom(char *arquivo);
 
 void exibeInicial();
 void exibeJogo();
@@ -81,7 +86,9 @@ int main(){
     // Tamanho do cursor do mouse
     int cursorMouseLargura = 28, //Largura do quadro a ser desenhado na tela
         cursorMouseAltura  = 39; //Altura do quadro a ser desenhado na tela
-
+    
+    CarregaSom("sons/266_MainMusic_sound_MainMusic_sound.mp3");
+    
     // inicia o loop do jogo
     while(!fimJogo){
              
@@ -291,3 +298,54 @@ void CalculaFPS() {
      frames = 0;
 } END_OF_FUNCTION(CalculaFPS);
 
+/*
+================================================================================
+void IniciaSom
+
+Quando carregada, ativa o sistema de audio.
+
+================================================================================
+*/
+
+void IniciaSom()
+{
+    FSOUND_DSP_SetActive(FSOUND_DSP_GetFFTUnit(), TRUE);
+}   
+ 
+/*
+================================================================================
+void FinalizaSom
+
+Quando carregada, finaliza o sistema de audio.
+
+================================================================================
+*/
+void FinalizaSom()
+{
+	    FSOUND_DSP_SetActive(FSOUND_DSP_GetFFTUnit(), FALSE);
+}    
+
+/*
+================================================================================
+void CarregaSom
+
+Executa o arquivo de audio informado atraves do parametro.
+
+================================================================================
+*/
+int CarregaSom(char *arquivo)
+{
+
+    FSOUND_SetBufferSize(150);
+  
+    if(!FSOUND_Init(44100, 128, FSOUND_INIT_GLOBALFOCUS)){
+       return 0;
+    }    
+    
+   IniciaSom();
+ 
+   som = FSOUND_Stream_Open(arquivo,0, 0, 0);
+   FSOUND_Stream_Play (0,som);
+ 
+   return 0;
+}
