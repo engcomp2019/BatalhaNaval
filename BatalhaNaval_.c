@@ -271,8 +271,10 @@ int gameLoop(){
         }
 
         if(coluna != 0){
+
             gameTabuleiro[linha][coluna].posX1   = gameTabuleiro[linha][coluna -1].posX1  + 25;
             gameTabuleiro[linha][coluna].posY14  = gameTabuleiro[linha][coluna -1].posY14 - 15;
+
         }
 
         gameTabuleiro[linha][coluna].posX23  = gameTabuleiro[linha][coluna].posX1  + 25;
