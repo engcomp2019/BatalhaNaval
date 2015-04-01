@@ -103,13 +103,6 @@ int main(){
         tX = 40,
         tY = 50;
 
-    // Testa se esse som já foi carregado
-    if(!somCarregado){
-        // Inicia a música do menu principal
-        fmodSis = CarregaSom("sons/105_Ocean_sound_Ocean_sound.mp3", FMOD_LOOP_NORMAL);
-        somCarregado = 1;
-    }
-    
     // inicia o loop do jogo
     while(!fimJogo){
              
@@ -117,6 +110,13 @@ int main(){
                
               clear(buffer);
               blit(fundoAgua, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
+
+              // Testa se esse som já foi carregado
+              if(!somCarregado){
+                 // Inicia o som do oceano
+                 fmodSis = CarregaSom("sons/105_Ocean_sound_Ocean_sound.mp3", FMOD_LOOP_NORMAL);
+                 somCarregado = 1;
+              }
 
               if(aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0){
         
@@ -160,8 +160,8 @@ int main(){
         textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, " Y: %i " , mouse_y);
         
 
-         //for(mLinha = 0; mLinha < qBlocos; mLinha++){
-
+          /*for(mLinha = 0; mLinha < qBlocos; mLinha++){
+        
              for(mColuna = 0; mColuna < qBlocos; mColuna++){
                  
                  if(mColuna == 0){        
@@ -180,8 +180,8 @@ int main(){
                  tY = tY + 10;
              }
 
-         //}
-        
+         }
+        */
 
         // Desenha mouse na tela com imagem
         draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
@@ -190,7 +190,6 @@ int main(){
         blit(buffer, screen, 0, 0, 0, 0, JANELA_LARGURA, JANELA_ALTURA);
        
     } // finaliza o loop do jogo
-  
 
     // Executa todas as finalizacoes necessarias
     Finaliza(); 

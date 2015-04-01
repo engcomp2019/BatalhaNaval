@@ -25,7 +25,7 @@ Executa o arquivo de audio informado atraves do parametro e o modo.
 */
 
 FMOD_SYSTEM *CarregaSom(char *arquivo, FMOD_MODE modo){
-
+ 
     FMOD_SYSTEM *fmodSistema = 0;
     FMOD_SOUND *fmodSom      = 0;
     FMOD_CHANNEL *fmodCanal  = 0;
