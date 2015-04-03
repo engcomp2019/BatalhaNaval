@@ -15,13 +15,13 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
-#include <fmod.h>
+#include "definicoes.h"
+#include "IndiceTab.h"
 
 // Variaveis Globais
 BITMAP  *buffer;
-FSOUND_STREAM  *som;
 
-#include "definicoes.h"
+
 
 // Define das telas do jogo
 #define TELA_INICIO 0
@@ -33,7 +33,7 @@ FSOUND_STREAM  *som;
 // Variaveis Gerais
 int fimJogo = 0; // Flag que indica se o jogo continua ou nao.
 int telaAtual = TELA_INICIO;  // Recebe a tela atual do jogo.
-    
+
 volatile int velocidade = 0; // Recebe o valor incremental da velocidade do jogo.
 volatile int totalFps   = 0;	// Recebe o total de frames por segundo (calculado apenas uma vez a cada segundo).
 volatile int frames     = 0;	// Recebe a quantidade de frames por segundo (incrementado a cada volta do loop principal ).
@@ -43,9 +43,6 @@ void Inicializa();
 void Finaliza();
 void VelocidadeJogo();
 void CalculaFPS();
-void IniciaSom();
-void FinalizaSom();
- int CarregaSom(char *arquivo);
 
 void exibeInicial();
 void exibeJogo();
@@ -54,29 +51,30 @@ void exibeResultado(int *resultado);
 
 //Função Main
 int main(){
-    
-    Inicializa();    
-    
+
+    Inicializa();
+
     //Variaveis de controle da movimentacao da agua
-    int aguaMovimentoX     = 0, 
+    int aguaMovimentoX     = 0,
         aguaMovimentoFator = 7,
         aguaMovimentoMin   = 0,
         aguaMovimentoMax   = (38 * aguaMovimentoFator),
         flagMaxX           = 0;
 
     // Fundos de Tela
-    BITMAP *fundoAgua      = load_bitmap("imagens/estaticos/agua.png",NULL);
-    BITMAP *moveAgua       = load_bitmap("imagens/estaticos/agua_2.png",NULL);
-  
+    BITMAP *fundoAgua            = load_bitmap("imagens/estaticos/agua.png",NULL);
+    BITMAP *moveAgua             = load_bitmap("imagens/estaticos/agua_2.png",NULL);
+
     // Rodapé
-    BITMAP *rodapeOpcoes   = load_bitmap("imagens/estaticos/rodape.png",NULL);
-  
+    BITMAP *rodapeOpcoes         = load_bitmap("imagens/estaticos/rodape.png",NULL);
+
     // Tabuleiro
-    BITMAP *gradeTabuleiro = load_bitmap("imagens/estaticos/tabuleiro.png",NULL);
-  
+    BITMAP *gradeTabuleiro       = load_bitmap("imagens/estaticos/tabuleiro.png",NULL);
+    BITMAP *gradeTabuleiroCores  = load_bitmap("imagens/estaticos/tabuleiro_cores.png",NULL);
+
     // Cursor do Mouse
-    BITMAP *cursorMouse    = load_bitmap("imagens/estaticos/mouse.png",NULL);
-  
+    BITMAP *cursorMouse          = load_bitmap("imagens/estaticos/mouse.png",NULL);
+
     //Ilhas
     BITMAP *ilhaSuperiorEsquerda = load_bitmap("imagens/estaticos/ilhas/top_left.png",NULL);
     BITMAP *ilhaSuperiorDireita  = load_bitmap("imagens/estaticos/ilhas/top_right.png",NULL);
@@ -86,70 +84,76 @@ int main(){
     // Tamanho do cursor do mouse
     int cursorMouseLargura = 28, //Largura do quadro a ser desenhado na tela
         cursorMouseAltura  = 39; //Altura do quadro a ser desenhado na tela
-    
-    CarregaSom("sons/266_MainMusic_sound_MainMusic_sound.mp3");
-    
+
     // inicia o loop do jogo
     while(!fimJogo){
-             
+
         while(velocidade > 0) {
-               
+
               clear(buffer);
               blit(fundoAgua, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
 
               if(aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0){
-        
+
                  if(aguaMovimentoX == aguaMovimentoMax){
                     flagMaxX = 1;
                  }
                  aguaMovimentoX++;
               }
               else if(aguaMovimentoX >= aguaMovimentoMin && flagMaxX == 1){
-                
+
                  if(aguaMovimentoX == aguaMovimentoMin){
                     flagMaxX = 0;
                  }
-                 aguaMovimentoX--; 
+                 aguaMovimentoX--;
               }
 
               draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX / aguaMovimentoFator),0);
-    
+
               draw_trans_sprite(buffer,ilhaSuperiorEsquerda,-40,0);
               draw_trans_sprite(buffer,ilhaSuperiorDireita,525,0);
               draw_trans_sprite(buffer,ilhaInferiorEsquerda,0,395);
               draw_trans_sprite(buffer,ilhaInferiorDireita,515,375);
-    
+
               draw_trans_sprite(buffer,rodapeOpcoes,0,458);
               draw_trans_sprite(buffer,gradeTabuleiro,30,40);
+              draw_trans_sprite(buffer,gradeTabuleiroCores,25,62);
 
               // Se pressionou a tecla ESC, entao finaliza o jogo.
-              if (key[KEY_ESC]) fimJogo = 1; 
-              
+              if (key[KEY_ESC]) fimJogo = 1;
+
               // Controle dos FPS
               velocidade--; // decrementa o contador de velociddade
               frames++;     // incrementa o contador de frames
 
-        } 
-        
+        }
+
         // Exibe o contador de frames na tela
         textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, " FPS: %i " , totalFps);
-        
+
+
+        //Teste posição mouse com cores//
+
+        char *testPos = verificaLocalMapa(gradeTabuleiroCores, mouse_x, mouse_y);
+
+        textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, " Indice: %s " ,testPos);
+
         // Desenha mouse na tela com imagem
         draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
 
         // Copia todo o conteudo desenhado no buffer para a tela.
         blit(buffer, screen, 0, 0, 0, 0, JANELA_LARGURA, JANELA_ALTURA);
-       
+
     } // finaliza o loop do jogo
-  
+
 
     // Executa todas as finalizacoes necessarias
-    Finaliza(); 
+    Finaliza();
 
-  
+
   // Encerra
   return 0;
-  
+
 }
 END_OF_MAIN();
 
@@ -204,18 +208,18 @@ void exibeResultado(int *resultado){}
 void Inicializa
 
 Realiza os procedimentos necessarios para iniciar o jogo.
-Inicia bibliotecas, realiza verificacoes fundamentais, seta posicoes iniciais... 
+Inicia bibliotecas, realiza verificacoes fundamentais, seta posicoes iniciais...
 
 ================================================================================
 */
 
 void Inicializa() {
-    
+
     allegro_init();
     alpng_init();
 
     set_color_depth( PROFUNDIDADE_COR );
-    
+
     if ( PROFUNDIDADE_COR == 32 ){
         set_alpha_blender(); // instala o canal alpha
     }
@@ -237,7 +241,7 @@ void Inicializa() {
     install_timer();
     install_keyboard();
     install_mouse();
-    
+
     LOCK_VARIABLE(velocidade);
     LOCK_FUNCTION(VelocidadeJogo);
     install_int_ex(VelocidadeJogo, BPS_TO_TIMER(FPS_MAXIMO));
@@ -268,7 +272,7 @@ void Finaliza() {
      remove_mouse();
      remove_sound();
      remove_keyboard();
-     allegro_exit(); 
+     allegro_exit();
 }
 
 /*
@@ -298,54 +302,5 @@ void CalculaFPS() {
      frames = 0;
 } END_OF_FUNCTION(CalculaFPS);
 
-/*
-================================================================================
-void IniciaSom
 
-Quando carregada, ativa o sistema de audio.
 
-================================================================================
-*/
-
-void IniciaSom()
-{
-    FSOUND_DSP_SetActive(FSOUND_DSP_GetFFTUnit(), TRUE);
-}   
- 
-/*
-================================================================================
-void FinalizaSom
-
-Quando carregada, finaliza o sistema de audio.
-
-================================================================================
-*/
-void FinalizaSom()
-{
-	    FSOUND_DSP_SetActive(FSOUND_DSP_GetFFTUnit(), FALSE);
-}    
-
-/*
-================================================================================
-void CarregaSom
-
-Executa o arquivo de audio informado atraves do parametro.
-
-================================================================================
-*/
-int CarregaSom(char *arquivo)
-{
-
-    FSOUND_SetBufferSize(150);
-  
-    if(!FSOUND_Init(44100, 128, FSOUND_INIT_GLOBALFOCUS)){
-       return 0;
-    }    
-    
-   IniciaSom();
- 
-   som = FSOUND_Stream_Open(arquivo,0, 0, 0);
-   FSOUND_Stream_Play (0,som);
- 
-   return 0;
-}

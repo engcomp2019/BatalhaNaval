@@ -13,36 +13,35 @@
 #include <stdio.h>
 
 // Prototipos das funcoes
-char *verificaLocalMapa(BITMAP *mapa, int mouseX, int mouseY);
 
 /*
 ================================================================================
 char *verificaLocalMapa:
 
-Recebe um bitmap e posicao do mouse, e retorna a posicao 
+Recebe um bitmap e posicao do mouse, e retorna a posicao
 no tabuleiro em que o mouse esta, levando em conta o indice de um tabuleiro
 de batalha naval.
 
 ================================================================================
 */
 
-char[] *verificaLocalMapa(BITMAP *mapa, int mouseX, int mouseY){
+char* verificaLocalMapa(BITMAP *mapa, int mouseX, int mouseY){
 
   int pixel, red, blue, green;
-  char indice[2]; 
+  char *indice;
 
   pixel = getpixel(mapa, mouseX, mouseY);
 
   if(pixel == -1){
     indice = "tt";
   }
-  
+
   if(indice != "tt"){
-  
+
     green = getg(pixel);
     blue  = getb(pixel);
     red   = getr(pixel);
-    
+
     if(red == 255 && green == 128 && blue == 0){
       indice = "a1";
     }
@@ -55,7 +54,7 @@ char[] *verificaLocalMapa(BITMAP *mapa, int mouseX, int mouseY){
     else if (red == 255 && green == 0 && blue == 0){
       indice = "b2";
     }
-    
+
   }
   return indice;
 }
