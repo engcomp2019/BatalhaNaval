@@ -18,17 +18,15 @@
 #include "definicoes.h"
 #include "IndiceTab.h"
 
-// Variaveis Globais
-BITMAP  *buffer;
-
-
-
 // Define das telas do jogo
 #define TELA_INICIO 0
 #define TELA_JOGO  1
 #define TELA_INSTRUCOES 2
 #define TELA_PERDEU  3
 #define TELA_GANHOU 4
+
+// Variaveis Globais
+BITMAP  *buffer;
 
 // Variaveis Gerais
 int fimJogo = 0; // Flag que indica se o jogo continua ou nao.
@@ -119,7 +117,7 @@ int main(){
 
               draw_trans_sprite(buffer,rodapeOpcoes,0,458);
               draw_trans_sprite(buffer,gradeTabuleiro,30,40);
-              draw_trans_sprite(buffer,gradeTabuleiroCores,25,62);
+              draw_trans_sprite(buffer,gradeTabuleiroCores,0,0);
 
               // Se pressionou a tecla ESC, entao finaliza o jogo.
               if (key[KEY_ESC]) fimJogo = 1;
