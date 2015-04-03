@@ -7,6 +7,7 @@
 
 // Cabeçalhos
 #include "main.h"
+//#include "indicetab.h"
 
 // Variaveis
 volatile int speed     = 0;                  // Recebe o valor incremental da velocidade do jogo
@@ -182,7 +183,8 @@ int gameLoop(){
   BITMAP *rodapeOpcoes   = load_bitmap("imagens/estaticos/rodape.png",NULL);
 
   // Tabuleiro
-  BITMAP *gradeTabuleiro = load_bitmap("imagens/estaticos/tabuleiro.png",NULL);
+  BITMAP *gradeTabuleiro      = load_bitmap("imagens/estaticos/tabuleiro.png",NULL);
+  BITMAP *gradeTabuleiroCores = load_bitmap("imagens/estaticos/tabuleiro_cores.png",NULL);
 
   // Cursor do Mouse
   BITMAP *cursorMouse    = load_bitmap("imagens/estaticos/mouse.png",NULL);
@@ -253,70 +255,6 @@ int gameLoop(){
   int linha;
   int coluna;
 
-  for(linha=0; linha < 10; linha++){
-
-    if(linha != 0 ){
-
-        gameTabuleiro[linha][coluna].posX1 = gameTabuleiro[linha -1][0].posX1 + 20;
-        gameTabuleiro[linha][coluna].posX1 = gameTabuleiro[linha -1][0].posY14 + 15;
-    }
-
-    for(coluna = 0; coluna < 10; coluna++){
-
-        if(linha ==0 && coluna ==0){
-
-          gameTabuleiro[linha][coluna].posX1  = 40;
-          gameTabuleiro[linha][coluna].posY14 = 196;
-
-        }
-
-        if(coluna != 0){
-            gameTabuleiro[linha][coluna].posX1   = gameTabuleiro[linha][coluna -1].posX1  + 20;
-            gameTabuleiro[linha][coluna].posY14  = gameTabuleiro[linha][coluna -1].posY14 + 15;
-        }
-
-        gameTabuleiro[linha][coluna].posX23  = gameTabuleiro[linha][coluna].posX1  + 20;
-        gameTabuleiro[linha][coluna].posX4   = gameTabuleiro[linha][coluna].posX23 + 20;
-        gameTabuleiro[linha][coluna].posY2   = gameTabuleiro[linha][coluna].posY14 - 15;
-        gameTabuleiro[linha][coluna].posY3   = gameTabuleiro[linha][coluna].posY2  + 15;
-
-
-        switch(linha){
-            case 0:
-                sprintf( gameTabuleiro[linha][coluna].indice, "a%i",coluna + 1);
-            break;
-            case 1:
-                sprintf( gameTabuleiro[linha][coluna].indice, "b%i",coluna + 1);
-            break;
-            case 2:
-                sprintf( gameTabuleiro[linha][coluna].indice, "c%i",coluna + 1);
-            break;
-            case 3:
-                sprintf( gameTabuleiro[linha][coluna].indice, "d%i",coluna + 1);
-            break;
-            case 4:
-                sprintf( gameTabuleiro[linha][coluna].indice, "e%i",coluna + 1);
-            break;
-            case 5:
-                sprintf( gameTabuleiro[linha][coluna].indice, "f%i",coluna + 1);
-            break;
-            case 6:
-                sprintf( gameTabuleiro[linha][coluna].indice, "g%i",coluna + 1);
-            break;
-            case 7:
-                sprintf( gameTabuleiro[linha][coluna].indice, "h%i",coluna + 1);
-            break;
-            case 8:
-                sprintf( gameTabuleiro[linha][coluna].indice, "i%i",coluna + 1);
-            break;
-            case 9:
-                sprintf( gameTabuleiro[linha][coluna].indice, "j%i",coluna + 1);
-            break;
-
-        }
-    }
-  }
-
   //FIM de atribuição de valores
   //TODO For para atribuir esses valores de forma automatica.
   //##############################################################################################
@@ -358,9 +296,20 @@ int gameLoop(){
     draw_trans_sprite(buffer,ilhaInferiorDireita,515,375);
 
     draw_trans_sprite(buffer,rodapeOpcoes,0,458);
-    draw_trans_sprite(buffer,gradeTabuleiro,30,40);
+    draw_trans_sprite(buffer,gradeTabuleiroCores,43,24);
+    draw_trans_sprite(buffer,gradeTabuleiro,0,0);
+	   
+    int pixel, red, blue, green;
 
-    textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "Movimento X: %d", aguaMovimentoX);
+    pixel = getpixel(gradeTabuleiroCores, mouse_x, mouse_y);
+
+    green = getg(pixel);
+    blue  = getb(pixel);
+    red   = getr(pixel);
+
+    textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "R: %d", red);
+    textprintf_ex( buffer, font, 10, 40, makecol(255,0,0), -1, "G: %d", blue);
+    textprintf_ex( buffer, font, 10, 50, makecol(255,0,0), -1, "B: %d", green);    
 
 
     if(speed >= vel_control){
@@ -380,48 +329,8 @@ int gameLoop(){
       /*Teste de posicionamento do mouse                                                                             */
       /*#############################################################################################################*/
 
-      for (linha = 0;linha < 10; linha++){
-        for(coluna = 0; coluna < 10; coluna++){
-
-          if ( ((mouse_x >= gameTabuleiro[linha][coluna].posX1 && mouse_x <= gameTabuleiro[linha][coluna].posX23) &&
-               ((mouse_y >= gameTabuleiro[linha][coluna].posY14 && mouse_y <= gameTabuleiro[linha][coluna].posY3) ||
-                 (mouse_y <= gameTabuleiro[linha][coluna].posY14 && mouse_y >= gameTabuleiro[linha][coluna].posY2))) ||
-
-                  ((mouse_x <= gameTabuleiro[linha][coluna].posX4 && mouse_x >= gameTabuleiro[linha][coluna].posX23) &&
-                    ((mouse_y >= gameTabuleiro[linha][coluna].posY14 && mouse_y <= gameTabuleiro[linha][coluna].posY3) ||
-                      (mouse_y <= gameTabuleiro[linha][coluna].posY14 && mouse_y >= gameTabuleiro[linha][coluna].posY3))) ){
-
-              //TODO Trocar imagem do quadro para "brilhar"
-              textprintf_ex( buffer, font, 10, 40, makecol(255,0,0), -1, "Voce esta na posicao: %s", gameTabuleiro[linha][coluna].indice);
-
-              if(gameTabuleiro[linha][coluna].adversario == 's'){
-
-                //TODO Trocar Mouse
-
-                if(mouse_b & 1){
-
-                  if(gameTabuleiro[linha][coluna].temNavio == 'n'){
-
-                    //TODO tiro na agua recebendo posição X e Y do centro
-
-                  }
-                  else if(gameTabuleiro[linha][coluna].temNavio == 's' && gameTabuleiro[linha][coluna].fogoAtivo == 'n'){
-
-                    //TODO Tiro no navio recebendo posição X e Y do centro
-
-                  }
-                  else if(gameTabuleiro[linha][coluna].temNavio == 's' && gameTabuleiro[linha][coluna].fogoAtivo == 's'){
-
-                    //TODO Bloquear mouse -- Trocar imagem
-
-                  }
-                }
-              }
-          }
-        }
-      }
-
-
+//		char indiceTabuleiro[3] = verificaLocalMapa(gradeTabuleiroCores, mouse_x, mouse_y);
+		//textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "indice: %s", indiceTabuleiro);
       /*#############################################################################################################*/
       if(mouse_b & 1 && ativaAgua == 0){
 

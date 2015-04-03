@@ -1,6 +1,6 @@
 /***********************************************************
 *                                                          *
-*    PROJETO APC 2 - JOGO DE BATALHA NAVAL COM ARDUÍNO 			 *
+*    PROJETO APC 2 - JOGO DE BATALHA NAVAL COM ARDUINO 			 *
 *                                                          *
 * Nome: Andre Queiroz					                RA:	27619994874		*
 * Nome: Raiany Araujo					                RA:	02055024230		*
@@ -38,7 +38,7 @@ volatile int velocidade = 0; // Recebe o valor incremental da velocidade do jogo
 volatile int totalFps   = 0;	// Recebe o total de frames por segundo (calculado apenas uma vez a cada segundo).
 volatile int frames     = 0;	// Recebe a quantidade de frames por segundo (incrementado a cada volta do loop principal ).
 
-// Protótipos das funções
+// Prototipos das funcoes
 void Inicializa();
 void Finaliza();
 void VelocidadeJogo();

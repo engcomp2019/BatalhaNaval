@@ -1,30 +1,36 @@
-/**************************************************************
-*                                                             *
-*    PROJETO APC 2 - JOGO DE BATALHA NAVAL COM ARDUÍNO 			  *
-*                                                             *
-* Nome: Andre Queiroz					                RA:	27619994874	*
-* Nome: Raiany Araujo					                RA:	02055024230	*
-* Nome: Rodrigo Sene					                RA:	42108819886	*
-* Data de Inicio: 28/02/2015                                  *
-* Data Final: 25/05/2015		                                  *
-**************************************************************/
+/***********************************************************
+*                                                          *
+*    PROJETO APC 2 - JOGO DE BATALHA NAVAL COM ARDUINO 			 *
+*                                                          *
+* Nome: Andre Queiroz					                 RA:	27619994874	*
+* Nome: Raiany Araujo					                 RA:	02055024230	*
+* Nome: Rodrigo Sene					                  RA:	42108819886 *
+* Data de Inicio: 28/02/2015                               *
+* Data Final: 25/05/2015		                                 *
+***********************************************************/
 
 // Bibliotecas (Arquivos de Cabecalho)
+#include <stdio.h>
 
+// Prototipos das funcoes
+char *verificaLocalMapa(BITMAP *mapa, int mouseX, int mouseY);
 
 /*
 ================================================================================
-verificaLocalMapa:
-Recebe um bitmap e posição do mouse, e retorna a posição 
-no tabuleiro em que o mouse está, levando em conta o indice de um tabuleiro
+char *verificaLocalMapa:
+
+Recebe um bitmap e posicao do mouse, e retorna a posicao 
+no tabuleiro em que o mouse esta, levando em conta o indice de um tabuleiro
 de batalha naval.
+
 ================================================================================
 */
 
-char* verificaLocalMapa(BITMAP *mapa, int mouseX, int mouseY){
+char[] *verificaLocalMapa(BITMAP *mapa, int mouseX, int mouseY){
 
   int pixel, red, blue, green;
-  char indice[3]; 
+  char indice[2]; 
+
   pixel = getpixel(mapa, mouseX, mouseY);
 
   if(pixel == -1){
