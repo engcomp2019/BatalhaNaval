@@ -25,12 +25,12 @@ de batalha naval.
 ================================================================================
 */
 
-char* verificaLocalMapa(int pixel){
+char * verificaLocalMapa(int pixel){
 
   int red, blue, green;
 
   if(pixel == -1){
-    return "tt";
+    return  "tt";
   }
 
   if(pixel != -1){
@@ -40,19 +40,20 @@ char* verificaLocalMapa(int pixel){
     red   = getr(pixel);
 
     if(red == 255 && green == 128 && blue == 0){
-      return "a1";
+      return  "a1";
     }
     else if (red == 255 && green == 255 && blue == 0){
-      return "a2";
+      return  "a2";
     }
     else if (red == 255 && green == 0 && blue == 166){
-      return "b2";
+      return  "b1";
     }
     else if (red == 216 && green == 0 && blue == 0){
-      return "b2";
+      return  "b2";
     }
 
   }
+
 }
 
 

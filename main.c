@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include "definicoes.h"
 #include "IndiceTab.h"
+//#include "adversario.h"
 
 // Define das telas do jogo
 #define TELA_INICIO 0
@@ -47,13 +48,39 @@ void exibeJogo();
 void exibeInstrucoes();
 void exibeResultado(int *resultado);
 
+typedef struct TRATAEVENTOS {
+
+  int  xCentro,
+       yCentro;
+  char *indice,
+       *tipoNavio;
+  char temNavio,
+       explosaoAtivo,
+       fogoAtivo,
+       navioDestruido;
+
+} trataEventos;
+
 //Função Main
 int main(){
 
     Inicializa();
 
-    char *testPos;
+    char *ponterioPosicao;
     int  pixel;
+    int  tipoMouse;
+    int i,j;
+
+    //Atribuição de Valores para o vetor de struct
+    trataEventos gameTabuleiro[10][10];
+    trataEventos gameTabuleiroAdversario[10][10];
+
+
+
+    gameTabuleiro[0][0].indice = "a1";
+    gameTabuleiro[0][1].indice = "a2";
+    gameTabuleiro[1][0].indice = "b1";
+    gameTabuleiro[1][1].indice = "b2";
 
     //Variaveis de controle da movimentacao da agua
     int aguaMovimentoX     = 0,
@@ -75,6 +102,7 @@ int main(){
 
     // Cursor do Mouse
     BITMAP *cursorMouse          = load_bitmap("imagens/estaticos/mouse.png",NULL);
+    BITMAP *cursorMouseAtaque    = load_bitmap("imagens/estaticos/mouseAtaque.png",NULL);
 
     //Ilhas
     BITMAP *ilhaSuperiorEsquerda = load_bitmap("imagens/estaticos/ilhas/top_left.png",NULL);
@@ -92,6 +120,7 @@ int main(){
         while(velocidade > 0) {
 
               clear(buffer);
+              draw_trans_sprite(buffer,gradeTabuleiroCores,0,0);
               blit(fundoAgua, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
 
               if(aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0){
@@ -118,7 +147,7 @@ int main(){
 
               draw_trans_sprite(buffer,rodapeOpcoes,0,458);
               draw_trans_sprite(buffer,gradeTabuleiro,0,0);
-              draw_trans_sprite(buffer,gradeTabuleiroCores,0,0);
+
 
               // Se pressionou a tecla ESC, entao finaliza o jogo.
               if (key[KEY_ESC]) fimJogo = 1;
@@ -130,18 +159,42 @@ int main(){
         }
 
         // Exibe o contador de frames na tela
-        textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, " FPS: %i " , totalFps);
+        textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, "FPS: %i " , totalFps);
 
 
         //Teste posição mouse com cores//
 
-        pixel   = getpixel(gradeTabuleiroCores, mouse_x, mouse_y);
-        testPos = verificaLocalMapa(pixel);
+        pixel = getpixel(gradeTabuleiroCores, mouse_x, mouse_y);
+        ponterioPosicao = verificaLocalMapa(pixel);
 
-        textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, " Indice: %s" ,testPos);
 
-        // Desenha mouse na tela com imagem
-        draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
+        for(i = 0; i < 10; i ++){
+            for(j = 0; j < 10; j ++){
+
+                if(gameTabuleiro[i][j].indice == ponterioPosicao){
+
+                    textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Local: %s" , gameTabuleiro[i][j].indice);
+                    tipoMouse = 1;
+                    break;
+                }
+                else{
+                    tipoMouse = 0;
+                }
+            }
+
+            if(tipoMouse == 1){
+                break;
+            }
+        }
+
+        if(tipoMouse == 1){
+            // Desenha mouse de ataque na tela caso seja inimigo
+            draw_trans_sprite(buffer, cursorMouseAtaque, mouse_x, mouse_y);
+        }
+        else{
+            // Desenha mouse na tela com imagem
+            draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
+        }
 
         // Copia todo o conteudo desenhado no buffer para a tela.
         blit(buffer, screen, 0, 0, 0, 0, JANELA_LARGURA, JANELA_ALTURA);
@@ -301,8 +354,146 @@ Executada uma vez por segundo para atualizar o contador de frames por segundo.
 
 void CalculaFPS() {
      totalFps = frames;
-     frames = 0;
+     frames   = 0;
 } END_OF_FUNCTION(CalculaFPS);
 
 
 
+
+
+
+
+
+void PopulaTabuleiroAdversario(trataEventos gameTabuleiroAdversario[10][10]){
+
+    int navioGrande  = 5;
+    int navioMedio   = 4;
+    int naviopequeno = 3;
+    int menorNavio   = 2;
+    int indSucesso   = 0;
+
+    while(indSucesso == 0){
+        indSucesso = PosicionaNavio(navioGrande,gameTabuleiroAdversario);
+    }
+    indSucesso = 0;
+
+    while(indSucesso == 0){
+        indSucesso = PosicionaNavio(navioMedio,gameTabuleiroAdversario);
+    }
+    indSucesso = 0;
+
+    while(indSucesso == 0){
+        indSucesso =  PosicionaNavio(naviopequeno,gameTabuleiroAdversario);
+    }
+    indSucesso = 0;
+
+    while(indSucesso == 0){
+        indSucesso = PosicionaNavio(naviopequeno,gameTabuleiroAdversario);
+    }
+    indSucesso = 0;
+
+    while(indSucesso == 0){
+        indSucesso = PosicionaNavio(menorNavio,gameTabuleiroAdversario);
+    }
+}
+
+
+/*
+char* EventosAdversario(trataEventos gameTabuleiro[][], char *ultimoTiro, int statusUltimoTiro){
+
+
+
+}
+*/
+
+void geraRound(int *linha, int *coluna){
+
+    linha  = rand() % 9;
+    coluna = rand() % 9;
+
+}
+
+
+/*
+ Função responsavel por setar os flags temNavio da struct, criando assim o posicionamento
+dos navios na matriz do adversario.
+ A função Rand é utilizada para verificar a posição do navio, e tambem se ele será posicionado
+na vertical ou horizontal.
+ Os navios sempre são posionados da esquerda para direita, e de cima para baixo.
+*/
+int PosicionaNavio(trataEventos gameTabuleiroAdversario[10][10],int tamanhoNavio){
+
+    const larguraTabuleiro = 10;
+    const alturaTabuleiro  = 10;
+    int linha, coluna;
+    int flagNavio  = 0;
+    int indSucesso = 0;
+    int valida     = 0,
+        verificaPosicao;
+    char posicao;
+
+    posicao = (rand() % 1 == 0) ? "v" : "h";
+
+    geraRound(&linha, &coluna);
+
+    while (valida != 1 ){
+
+        if(posicao == "v" && linha < (alturaTabuleiro - tamanhoNavio)){
+            valida = 0;
+        }else if(posicao == "h" && coluna < (larguraTabuleiro - tamanhoNavio)){
+            valida = 0;
+        }
+        else{
+            geraRound(linha, coluna);
+        }
+    }
+
+    //posicionando navios
+    if(gameTabuleiroAdversario[linha][coluna].temNavio == "n"){
+
+        //Pociciona navio na horizontal
+        if(posicao == "h"){
+            for(coluna; coluna < (coluna + tamanhoNavio); coluna ++){
+
+                if(gameTabuleiroAdversario[linha][coluna].temNavio == "s"){
+                    flagNavio = 1;
+                    break;
+                }
+            }
+
+            if (flagNavio == 0){
+
+                for(coluna; coluna < (coluna + tamanhoNavio); coluna ++){
+
+                    gameTabuleiroAdversario[linha][coluna].temNavio = "s";
+
+                }
+
+                indSucesso = 1;
+            }
+        }
+        //Pociciona navio na vertical
+        else{
+
+            for(linha;linha < (linha + tamanhoNavio); linha ++){
+
+                if(gameTabuleiroAdversario[linha][coluna].temNavio == "s"){
+
+                    flagNavio = 1;
+                    break;
+                }
+            }
+            if (flagNavio == 0){
+
+                for(linha;linha < (linha + tamanhoNavio); linha ++){
+
+                    gameTabuleiroAdversario[linha][coluna].temNavio = "s";
+                }
+
+                indSucesso = 1;
+            }
+        }
+    }
+
+    return indSucesso;
+}
