@@ -53,6 +53,7 @@ int main(){
     Inicializa();
 
     char *testPos;
+    int  pixel;
 
     //Variaveis de controle da movimentacao da agua
     int aguaMovimentoX     = 0,
@@ -116,7 +117,7 @@ int main(){
               draw_trans_sprite(buffer,ilhaInferiorDireita,515,375);
 
               draw_trans_sprite(buffer,rodapeOpcoes,0,458);
-              draw_trans_sprite(buffer,gradeTabuleiro,30,40);
+              draw_trans_sprite(buffer,gradeTabuleiro,0,0);
               draw_trans_sprite(buffer,gradeTabuleiroCores,0,0);
 
               // Se pressionou a tecla ESC, entao finaliza o jogo.
@@ -134,9 +135,10 @@ int main(){
 
         //Teste posição mouse com cores//
 
-        testPos = verificaLocalMapa(gradeTabuleiroCores, mouse_x, mouse_y);
+        pixel   = getpixel(gradeTabuleiroCores, mouse_x, mouse_y);
+        testPos = verificaLocalMapa(pixel);
 
-        textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, " Indice: %c " ,testPos);
+        textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, " Indice: %s" ,testPos);
 
         // Desenha mouse na tela com imagem
         draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);

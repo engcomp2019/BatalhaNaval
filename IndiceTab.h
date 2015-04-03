@@ -25,38 +25,34 @@ de batalha naval.
 ================================================================================
 */
 
-char* verificaLocalMapa(BITMAP *mapa, int mouseX, int mouseY){
+char* verificaLocalMapa(int pixel){
 
-  int pixel, red, blue, green;
-  char *indice;
-
-  pixel = getpixel(mapa, mouseX, mouseY);
+  int red, blue, green;
 
   if(pixel == -1){
-    indice = "tt";
+    return "tt";
   }
 
-  if(indice != "tt"){
+  if(pixel != -1){
 
     green = getg(pixel);
     blue  = getb(pixel);
     red   = getr(pixel);
 
     if(red == 255 && green == 128 && blue == 0){
-      indice = "a1";
+      return "a1";
     }
     else if (red == 255 && green == 255 && blue == 0){
-      indice = "a2";
+      return "a2";
     }
     else if (red == 255 && green == 0 && blue == 166){
-      indice = "b2";
+      return "b2";
     }
-    else if (red == 255 && green == 0 && blue == 0){
-      indice = "b2";
+    else if (red == 216 && green == 0 && blue == 0){
+      return "b2";
     }
 
   }
-  return indice;
 }
 
 
