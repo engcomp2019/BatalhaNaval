@@ -10,7 +10,7 @@
 ***********************************************************/
 
 // Bibliotecas (Arquivos de Cabecalho)
-#include <stdio.h>
+#include <allegro.h>
 
 // Prototipos das funcoes
 

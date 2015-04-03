@@ -54,6 +54,8 @@ int main(){
 
     Inicializa();
 
+    char *testPos;
+
     //Variaveis de controle da movimentacao da agua
     int aguaMovimentoX     = 0,
         aguaMovimentoFator = 7,
@@ -134,9 +136,9 @@ int main(){
 
         //Teste posição mouse com cores//
 
-        char *testPos = verificaLocalMapa(gradeTabuleiroCores, mouse_x, mouse_y);
+        testPos = verificaLocalMapa(gradeTabuleiroCores, mouse_x, mouse_y);
 
-        textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, " Indice: %s " ,testPos);
+        textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, " Indice: %c " ,testPos);
 
         // Desenha mouse na tela com imagem
         draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
