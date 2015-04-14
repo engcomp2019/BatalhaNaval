@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include "definicoes.h"
 #include "IndiceTab.h"
+#include "main.h"
 //#include "adversario.h"
 
 // Define das telas do jogo
@@ -54,10 +55,10 @@ typedef struct TRATAEVENTOS {
        yCentro;
   char *indice,
        *tipoNavio;
-  char temNavio,
+  int  temNavio,
        explosaoAtivo,
        fogoAtivo,
-       navioDestruido;
+       destruido;
 
 } trataEventos;
 
@@ -65,11 +66,29 @@ typedef struct TRATAEVENTOS {
 int main(){
 
     Inicializa();
+    // Tamanho do cursor do mouse
+    int cursorMouseLargura = 28, //Largura do quadro a ser desenhado na tela
+        cursorMouseAltura  = 39; //Altura do quadro a ser desenhado na tela
 
     char *ponterioPosicao;
     int  pixel;
-    int  tipoMouse;
-    int i,j;
+    int  tipoMouse,trataParada;
+    int  i,j;
+
+    // Controla local que a explosão irá ocorrer.
+    int LocalExplosaoAguaX = 0,
+        LocalExplosaoAguaY = 0,
+        LocalExplosaoX     = 0,
+        LocalExplosaoY     = 0;
+
+    //Flags para animação de agua.
+    int ativaAgua = 0,
+        countAgua = 0;
+    //Flags para animaçao de explosao
+    int ativaExplosao = 0,
+        countExplosao = 0;
+    //Controla eventos gerais do jogo.
+    int flagEventoAtivo = 0;
 
     //Atribuição de Valores para o vetor de struct
     trataEventos gameTabuleiro[10][10];
@@ -77,10 +96,21 @@ int main(){
 
 
 
-    gameTabuleiro[0][0].indice = "a1";
-    gameTabuleiro[0][1].indice = "a2";
-    gameTabuleiro[1][0].indice = "b1";
-    gameTabuleiro[1][1].indice = "b2";
+    gameTabuleiro[0][0].indice    = "a1";
+    gameTabuleiro[0][0].temNavio  = 1;
+    gameTabuleiro[0][0].xCentro   = 60;
+    gameTabuleiro[0][0].yCentro   = 40;
+
+    gameTabuleiro[0][1].indice    = "a2";
+    gameTabuleiro[0][1].temNavio  = 0;
+    gameTabuleiro[0][1].xCentro   = 95;
+    gameTabuleiro[0][1].yCentro   = 165;
+
+    gameTabuleiro[1][0].indice    = "b1";
+    gameTabuleiro[1][0].temNavio  = 1;
+    gameTabuleiro[1][0].destruido = 1;
+
+    gameTabuleiro[1][1].indice    = "b2";
 
     //Variaveis de controle da movimentacao da agua
     int aguaMovimentoX     = 0,
@@ -110,9 +140,12 @@ int main(){
     BITMAP *ilhaInferiorEsquerda = load_bitmap("imagens/estaticos/ilhas/bottom_left.png",NULL);
     BITMAP *ilhaInferiorDireita  = load_bitmap("imagens/estaticos/ilhas/bottom_right.png",NULL);
 
-    // Tamanho do cursor do mouse
-    int cursorMouseLargura = 28, //Largura do quadro a ser desenhado na tela
-        cursorMouseAltura  = 39; //Altura do quadro a ser desenhado na tela
+    //Animações
+    BITMAP *animaTiroAgua[FPS_TIRO_AGUA];
+    loadBitmap(animaTiroAgua, "sprites/agua", FPS_TIRO_AGUA );
+
+    BITMAP *animaExplosao[FPS_EXPLOSAO];
+    loadBitmap(animaExplosao, "sprites/explosao", FPS_TIRO_AGUA );
 
     // inicia o loop do jogo
     while(!fimJogo){
@@ -148,6 +181,93 @@ int main(){
               draw_trans_sprite(buffer,rodapeOpcoes,0,458);
               draw_trans_sprite(buffer,gradeTabuleiro,0,0);
 
+            //Teste posição mouse com cores//
+
+            pixel = getpixel(gradeTabuleiroCores, mouse_x, mouse_y);
+            ponterioPosicao = verificaLocalMapa(pixel);
+
+
+            for(i = 0; i < 10; i ++){
+                for(j = 0; j < 10; j ++){
+
+                    if(gameTabuleiro[i][j].indice == ponterioPosicao){
+
+                        tipoMouse = 1;//Inicio a váriavel que controla a imagem do mouse.
+
+                        if(gameTabuleiro[i][j].temNavio == 1 && gameTabuleiro[i][j].destruido == 1){
+                            //Não deixa atirar no local.
+                                tipoMouse = 0;
+                            }
+
+                        if(mouse_b & 1 && flagEventoAtivo == 0){
+                        //Verifica se houve clique do mouse no quadro(Botão direito).
+
+                            if(gameTabuleiro[i][j].temNavio == 1 && gameTabuleiro[i][j].destruido == 0){
+                            //Ativr animação de explosão.
+                                ativaExplosao = 1;
+                                LocalExplosaoX = gameTabuleiro[i][j].xCentro; //Largura dividido por dois
+                                LocalExplosaoY = gameTabuleiro[i][j].yCentro; //altura total
+                            }
+
+                            else if(gameTabuleiro[i][j].temNavio == 0){
+                            //Ativr animação de explosão na agua.
+                                ativaAgua = 1;
+                                flagEventoAtivo = 1;
+                                LocalExplosaoAguaX = gameTabuleiro[i][j].xCentro - 34; //Largura dividido por dois
+                                LocalExplosaoAguaY = gameTabuleiro[i][j].yCentro - 60; //altura total
+                            }
+                        }
+                        textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Local: %s" , gameTabuleiro[i][j].indice);
+                        trataParada = 1;
+                        break;
+                    }
+                    else{
+                        tipoMouse   = 0;
+                        trataParada = 0;
+                    }
+                }
+
+                if(trataParada == 1){
+                    break;
+                }
+            }
+
+            if(countAgua < FPS_TIRO_AGUA && ativaAgua == 1){
+
+                draw_trans_sprite(buffer, animaTiroAgua[countAgua], LocalExplosaoAguaX, LocalExplosaoAguaY);
+                countAgua ++;
+
+                if(countAgua == (FPS_TIRO_AGUA -1) ){
+
+                  countAgua  = 0;
+                  ativaAgua  = 0;
+                  flagEventoAtivo = 0;
+                }
+
+            }
+
+
+            if(countExplosao < FPS_EXPLOSAO && ativaExplosao == 1){
+
+            draw_trans_sprite(buffer, animaExplosao[countExplosao], LocalExplosaoX, LocalExplosaoY);
+            countExplosao ++;
+
+                if(countExplosao == (FPS_EXPLOSAO -1) ){
+
+                  countExplosao  = 0;
+                  ativaExplosao  = 0;
+
+                }
+            }
+
+            if(tipoMouse == 1){
+                // Desenha mouse de ataque na tela caso seja inimigo
+                draw_trans_sprite(buffer, cursorMouseAtaque, mouse_x, mouse_y);
+            }
+            else{
+                // Desenha mouse na tela com imagem
+                draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
+            }
 
               // Se pressionou a tecla ESC, entao finaliza o jogo.
               if (key[KEY_ESC]) fimJogo = 1;
@@ -161,40 +281,9 @@ int main(){
         // Exibe o contador de frames na tela
         textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, "FPS: %i " , totalFps);
 
-
-        //Teste posição mouse com cores//
-
-        pixel = getpixel(gradeTabuleiroCores, mouse_x, mouse_y);
-        ponterioPosicao = verificaLocalMapa(pixel);
-
-
-        for(i = 0; i < 10; i ++){
-            for(j = 0; j < 10; j ++){
-
-                if(gameTabuleiro[i][j].indice == ponterioPosicao){
-
-                    textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Local: %s" , gameTabuleiro[i][j].indice);
-                    tipoMouse = 1;
-                    break;
-                }
-                else{
-                    tipoMouse = 0;
-                }
-            }
-
-            if(tipoMouse == 1){
-                break;
-            }
-        }
-
-        if(tipoMouse == 1){
-            // Desenha mouse de ataque na tela caso seja inimigo
-            draw_trans_sprite(buffer, cursorMouseAtaque, mouse_x, mouse_y);
-        }
-        else{
-            // Desenha mouse na tela com imagem
-            draw_trans_sprite(buffer, cursorMouse, mouse_x, mouse_y);
-        }
+        //Exibe posição X e Y do Mouse
+        textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "Mouse X: %d", mouse_x);
+        textprintf_ex( buffer, font, 10, 40, makecol(255,0,0), -1, "Mouse Y: %d", mouse_y);
 
         // Copia todo o conteudo desenhado no buffer para a tela.
         blit(buffer, screen, 0, 0, 0, 0, JANELA_LARGURA, JANELA_ALTURA);
@@ -412,8 +501,6 @@ void geraRound(int *linha, int *coluna){
     coluna = rand() % 9;
 
 }
-
-
 /*
  Função responsavel por setar os flags temNavio da struct, criando assim o posicionamento
 dos navios na matriz do adversario.
@@ -496,4 +583,19 @@ int PosicionaNavio(trataEventos gameTabuleiroAdversario[10][10],int tamanhoNavio
     }
 
     return indSucesso;
+}
+
+
+
+void loadBitmap(BITMAP *imagem[], char *pasta, int frames){
+
+     int i;
+     char caminho[100];
+
+     for(i=0; i < frames; i++){
+
+       sprintf( caminho, "imagens/%s/%i.png",pasta,i);
+       imagem[i] = load_bitmap(caminho, NULL);
+     }
+
 }
