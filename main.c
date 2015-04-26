@@ -49,6 +49,8 @@ void exibeJogo();
 void exibeInstrucoes();
 void exibeResultado(int *resultado);
 
+void loadBitmap(BITMAP *imagem[], char *pasta, int frames);
+
 typedef struct TRATAEVENTOS {
 
   int  xCentro,
@@ -73,7 +75,7 @@ int main(){
     char *ponterioPosicao;
     int  pixel;
     int  tipoMouse,trataParada;
-    int  i,j;
+    int  linha,coluna;
 
     // Controla local que a explosão irá ocorrer.
     int LocalExplosaoAguaX = 0,
@@ -94,7 +96,46 @@ int main(){
     trataEventos gameTabuleiro[10][10];
     trataEventos gameTabuleiroAdversario[10][10];
 
+    for(linha = 0; linha < 10; linha++){
+        for(coluna = 0; coluna < 10; coluna++){
 
+            gameTabuleiro[linha][coluna].temNavio  = 0;
+            gameTabuleiro[linha][coluna].destruido = 0;
+/*
+            switch(linha){
+                case 0:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "a%i",coluna + 1);
+                break;
+                case 1:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "b%i",coluna + 1);
+                break;
+                case 2:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "c%i",coluna + 1);
+                break;
+                case 3:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "d%i",coluna + 1);
+                break;
+                case 4:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "e%i",coluna + 1);
+                break;
+                case 5:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "f%i",coluna + 1);
+                break;
+                case 6:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "g%i",coluna + 1);
+                break;
+                case 7:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "h%i",coluna + 1);
+                break;
+                case 8:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "i%i",coluna + 1);
+                break;
+                case 9:
+                    sprintf( gameTabuleiro[linha][coluna].indice, "j%i",coluna + 1);
+                break;
+            }*/
+        }
+    }
 
     gameTabuleiro[0][0].indice    = "a1";
     gameTabuleiro[0][0].temNavio  = 1;
@@ -187,14 +228,14 @@ int main(){
             ponterioPosicao = verificaLocalMapa(pixel);
 
 
-            for(i = 0; i < 10; i ++){
-                for(j = 0; j < 10; j ++){
+            for(linha = 0; linha < 10; linha ++){
+                for(coluna = 0; coluna < 10; coluna ++){
 
-                    if(gameTabuleiro[i][j].indice == ponterioPosicao){
+                    if(gameTabuleiro[linha][coluna].indice == ponterioPosicao){
 
                         tipoMouse = 1;//Inicio a váriavel que controla a imagem do mouse.
 
-                        if(gameTabuleiro[i][j].temNavio == 1 && gameTabuleiro[i][j].destruido == 1){
+                        if(gameTabuleiro[linha][coluna].temNavio == 1 && gameTabuleiro[linha][coluna].destruido == 1){
                             //Não deixa atirar no local.
                                 tipoMouse = 0;
                             }
@@ -202,22 +243,22 @@ int main(){
                         if(mouse_b & 1 && flagEventoAtivo == 0){
                         //Verifica se houve clique do mouse no quadro(Botão direito).
 
-                            if(gameTabuleiro[i][j].temNavio == 1 && gameTabuleiro[i][j].destruido == 0){
+                            if(gameTabuleiro[linha][coluna].temNavio == 1 && gameTabuleiro[linha][coluna].destruido == 0){
                             //Ativr animação de explosão.
                                 ativaExplosao = 1;
-                                LocalExplosaoX = gameTabuleiro[i][j].xCentro; //Largura dividido por dois
-                                LocalExplosaoY = gameTabuleiro[i][j].yCentro; //altura total
+                                LocalExplosaoX = gameTabuleiro[linha][coluna].xCentro; //Largura dividido por dois
+                                LocalExplosaoY = gameTabuleiro[linha][coluna].yCentro; //altura total
                             }
 
-                            else if(gameTabuleiro[i][j].temNavio == 0){
+                            else if(gameTabuleiro[linha][coluna].temNavio == 0){
                             //Ativr animação de explosão na agua.
                                 ativaAgua = 1;
                                 flagEventoAtivo = 1;
-                                LocalExplosaoAguaX = gameTabuleiro[i][j].xCentro - 34; //Largura dividido por dois
-                                LocalExplosaoAguaY = gameTabuleiro[i][j].yCentro - 60; //altura total
+                                LocalExplosaoAguaX = gameTabuleiro[linha][coluna].xCentro - 34; //Largura dividido por dois
+                                LocalExplosaoAguaY = gameTabuleiro[linha][coluna].yCentro - 60; //altura total
                             }
                         }
-                        textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Local: %s" , gameTabuleiro[i][j].indice);
+                        textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Local: %s" , gameTabuleiro[linha][coluna].indice);
                         trataParada = 1;
                         break;
                     }
@@ -488,7 +529,7 @@ void PopulaTabuleiroAdversario(trataEventos gameTabuleiroAdversario[10][10]){
 
 
 /*
-char* EventosAdversario(trataEventos gameTabuleiro[][], char *ultimoTiro, int statusUltimoTiro){
+char* EventosAdversario(trataEventos gameTabuleiro[][10], char *ultimoTiro, int statusUltimoTiro){
 
 
 
@@ -497,8 +538,8 @@ char* EventosAdversario(trataEventos gameTabuleiro[][], char *ultimoTiro, int st
 
 void geraRound(int *linha, int *coluna){
 
-    linha  = rand() % 9;
-    coluna = rand() % 9;
+    *linha  = rand() % 9;
+    *coluna = rand() % 9;
 
 }
 /*
@@ -508,7 +549,7 @@ dos navios na matriz do adversario.
 na vertical ou horizontal.
  Os navios sempre são posionados da esquerda para direita, e de cima para baixo.
 */
-int PosicionaNavio(trataEventos gameTabuleiroAdversario[10][10],int tamanhoNavio){
+int PosicionaNavio(trataEventos gameTabuleiroAdversario[][10],int tamanhoNavio){
 
     const larguraTabuleiro = 10;
     const alturaTabuleiro  = 10;
