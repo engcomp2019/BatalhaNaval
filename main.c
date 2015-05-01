@@ -22,9 +22,11 @@
 
 // Variaveis Globais
 BITMAP  *buffer;
-FMOD_SYSTEM *fmodSis = 0;
+FMOD_SYSTEM *fmodCenario = 0;
+FMOD_SYSTEM *fmodMenu = 0;
 
 // Variaveis Gerais
+int inicioJogo     = 0;           // Flag que indica se o jogo foi iniciado
 int fimJogo        = 0;           // Flag que indica se o jogo continua ou nao.
 int somCarregado   = 0;           // Flag que indica se o som foi carregado ou nao.
 int telaAtual      = TELA_INICIO; // Recebe o valor da tela atual do jogo.
@@ -39,7 +41,7 @@ void Finaliza();
 void VelocidadeJogo();
 void CalculaFPS();
 
-void exibeCarregando();
+void exibeCarregando(BITMAP *local);
 int  exibeMenu(BITMAP *local);
 void exibeInicial(BITMAP *origem, BITMAP *destino);
 void exibeJogo();
@@ -56,6 +58,9 @@ int main(){
     
     Inicializa();
     
+    // Exibe a mensagem de carregando na tela
+    exibeCarregando(screen);
+
     // Inicialização dos cenários
     BITMAP *telaIntro = load_bitmap("imagens/estaticos/intro.png", NULL);
     stcCenario intro;
@@ -68,39 +73,45 @@ int main(){
     setImagemCenario(&instrucoes, telaInstrucoes);
     setPosicaoX(&instrucoes, 0);
     setPosicaoY(&instrucoes, 0);
+
+    BITMAP *telaPoreparacao = load_bitmap("imagens/estaticos/preparacao.png", NULL);
+    stcCenario preparacao;
+    setImagemCenario(&preparacao, telaPoreparacao);
+    setPosicaoX(&preparacao, 0);
+    setPosicaoY(&preparacao, 0);
     
     // Fundos de Tela
-    //BITMAP *fundoAgua            = load_bitmap("imagens/estaticos/agua.png",NULL);
-    //BITMAP *moveAgua             = load_bitmap("imagens/estaticos/agua_2.png",NULL);
+    BITMAP *fundoAgua            = load_bitmap("imagens/estaticos/agua.png",NULL);
+    BITMAP *moveAgua             = load_bitmap("imagens/estaticos/agua_2.png",NULL);
 
     // Rodapé
-    //BITMAP *rodapeOpcoes         = load_bitmap("imagens/estaticos/rodape.png",NULL);
+    BITMAP *rodapeOpcoes         = load_bitmap("imagens/estaticos/rodape.png",NULL);
 
     // Tabuleiro
-    //BITMAP *gradeTabuleiro       = load_bitmap("imagens/estaticos/tabuleiro.png",NULL);
-    //BITMAP *gradeTabuleiroCores  = load_bitmap("imagens/estaticos/tabuleiro_cores.png",NULL);
+    BITMAP *gradeTabuleiro       = load_bitmap("imagens/estaticos/tabuleiro.png",NULL);
+    BITMAP *gradeTabuleiroCores  = load_bitmap("imagens/estaticos/tabuleiro_cores.png",NULL);
 
     // Cursor do Mouse
     BITMAP *cursorMouse            = load_bitmap("imagens/estaticos/mouse.png",NULL);
     BITMAP *cursorMouseAtaque      = load_bitmap("imagens/estaticos/mouseAtaque.png",NULL);
 
     //Ilhas
-    //BITMAP *ilhaSuperiorEsquerda = load_bitmap("imagens/estaticos/ilhas/top_left.png",NULL);
-    //BITMAP *ilhaSuperiorDireita  = load_bitmap("imagens/estaticos/ilhas/top_right.png",NULL);
-    //BITMAP *ilhaInferiorEsquerda = load_bitmap("imagens/estaticos/ilhas/bottom_left.png",NULL);
-    //BITMAP *ilhaInferiorDireita  = load_bitmap("imagens/estaticos/ilhas/bottom_right.png",NULL);
+    BITMAP *ilhaSuperiorEsquerda = load_bitmap("imagens/estaticos/ilhas/top_left.png",NULL);
+    BITMAP *ilhaSuperiorDireita  = load_bitmap("imagens/estaticos/ilhas/top_right.png",NULL);
+    BITMAP *ilhaInferiorEsquerda = load_bitmap("imagens/estaticos/ilhas/bottom_left.png",NULL);
+    BITMAP *ilhaInferiorDireita  = load_bitmap("imagens/estaticos/ilhas/bottom_right.png",NULL);
     /*
     // Tamanho do cursor do mouse
     int cursorMouseLargura = 28, //Largura do quadro a ser desenhado na tela
         cursorMouseAltura  = 39; //Altura do quadro a ser desenhado na tela
-
+*/
     //Variaveis de controle da movimentacao da agua
     int aguaMovimentoX     = 0,
         aguaMovimentoFator = 7,
         aguaMovimentoMin   = 0,
         aguaMovimentoMax   = (38 * aguaMovimentoFator),
         flagMaxX           = 0;
-    */
+    
     
     
 
@@ -117,24 +128,88 @@ int main(){
 
                           // Testa se esse som já foi carregado
                           if(!somCarregado){
-                             // Inicia o som da tela de inicio no sistema
-                             fmodSis = CarregaSom("sons/_entrada.mp3", FMOD_LOOP_NORMAL);
+                             // Inicia o som do cenário
+                             fmodCenario = CarregaSom("sons/_entrada.mp3", FMOD_LOOP_NORMAL);
                              somCarregado = 1;
                           }
+
                           desenhaCenario(buffer, intro);
                           telaAtual = exibeMenu(buffer);
                           fimJogo = verificaSaida(telaAtual);
                           break;
-                     
-                     case TELA_JOGO:
+
+                     case TELA_PREPARACAO:
                           
+                          // Testa se esse som já foi carregado
+                          if(!somCarregado){
+                             // Inicia o som do cenário
+                             FMOD_System_Release(fmodCenario);
+                             rest(250);
+                             fmodCenario = CarregaSom("sons/_preparar.mp3", FMOD_LOOP_OFF);
+                             somCarregado = 1;
+                             
+                          }
+
+                          desenhaCenario(buffer, preparacao);
+                          //fimJogo = verificaSaida(telaAtual);
+                          break;
+                          
+                          break;
+
+                     case TELA_JOGO:
+      
+                          if(!inicioJogo){
+
+                             somCarregado = 0;            
+                             // Exibe a mensagem de carregando na tela
+                             exibeCarregando(screen);
+                             inicioJogo = 1;
+                             FMOD_System_Release(fmodCenario); 
+                          }
+                            
+                           // Testa se esse som já foi carregado
+                          if(!somCarregado){              
+                             // Inicia o som do cenário
+                             rest(250); 
+                             fmodCenario = CarregaSom("sons/_oceano.mp3", FMOD_LOOP_NORMAL);
+                             somCarregado = 1;
+                          }
+
+                          blit(gradeTabuleiroCores, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
+                          blit(fundoAgua, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
+                          
+                          if(aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0){
+                    
+                             if(aguaMovimentoX == aguaMovimentoMax){
+                                flagMaxX = 1;
+                             }
+                             aguaMovimentoX++;
+                          }
+                          else if(aguaMovimentoX >= aguaMovimentoMin && flagMaxX == 1){
+                            
+                             if(aguaMovimentoX == aguaMovimentoMin){
+                                flagMaxX = 0;
+                             }
+                             aguaMovimentoX--; 
+                          }
+                          
+                          draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX / aguaMovimentoFator),0);
+                
+                          draw_trans_sprite(buffer,ilhaSuperiorEsquerda,-40,0);
+                          draw_trans_sprite(buffer,ilhaSuperiorDireita,525,0);
+                          draw_trans_sprite(buffer,ilhaInferiorEsquerda,0,395);
+                          draw_trans_sprite(buffer,ilhaInferiorDireita,515,375);
+                
+                          draw_trans_sprite(buffer,rodapeOpcoes,0,458);
+                          draw_trans_sprite(buffer,gradeTabuleiro,0,0);
+
                           break;
                           
                      case TELA_INSTRUCOES:
 
                           desenhaCenario(buffer, instrucoes);
 
-                          if(mouse_b && (mouse_x >= 648 && mouse_x <= 778) && (mouse_y >= 520 && mouse_y <= 583)){
+                          if(mouse_b && (mouse_x >= 626 && mouse_x <= 756) && (mouse_y >= 504 && mouse_y <= 558)){
                              telaAtual = TELA_INICIO;                                      
                           }
                           
@@ -151,38 +226,17 @@ int main(){
               }
                
                              
-              /*blit(fundoAgua, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
-              blit(gradeTabuleiroCores, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
-              if(aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0){
-        
-                 if(aguaMovimentoX == aguaMovimentoMax){
-                    flagMaxX = 1;
-                 }
-                 aguaMovimentoX++;
-              }
-              else if(aguaMovimentoX >= aguaMovimentoMin && flagMaxX == 1){
-                
-                 if(aguaMovimentoX == aguaMovimentoMin){
-                    flagMaxX = 0;
-                 }
-                 aguaMovimentoX--; 
-              }
               
-              //draw_trans_sprite(buffer,moveAgua,-(aguaMovimentoX / aguaMovimentoFator),0);
-    
-              draw_trans_sprite(buffer,ilhaSuperiorEsquerda,-40,0);
-              draw_trans_sprite(buffer,ilhaSuperiorDireita,525,0);
-              draw_trans_sprite(buffer,ilhaInferiorEsquerda,0,395);
-              draw_trans_sprite(buffer,ilhaInferiorDireita,515,375);
-    
-              draw_trans_sprite(buffer,rodapeOpcoes,0,458);
-              draw_trans_sprite(buffer,gradeTabuleiro,0,0);
               
-              DefinePosicaoGrade( gradeTabuleiroCores );*/
+              /*DefinePosicaoGrade( gradeTabuleiroCores );*/
              
               
               // Se pressionou a tecla ESC, entao finaliza o jogo.
-              if (key[KEY_ESC]) fimJogo = 1;
+              if (key[KEY_ESC]){
+                  somCarregado = 0;
+                  FMOD_System_Release(fmodCenario);
+                  telaAtual = TELA_INICIO;
+              }
 
               // Controle dos FPS
               velocidade--; // decrementa o contador de velociddade
@@ -251,11 +305,7 @@ void Inicializa() {
          allegro_message("Erro ao inicializar o som");
          exit(-1);
 
-    }
-    
-    // Exibe a mensagem de carregando na tela
-    exibeCarregando();
-    
+    }   
     
     install_timer();
     install_keyboard();
@@ -341,29 +391,33 @@ int exibeMenu(BITMAP *local){
     setImagemCenario(&menu, hover);
 
    if((mouse_x >= 265 && mouse_x <= 385) && (mouse_y >= 339 && mouse_y <= 405)){
-       
-      /*fmodSis = CarregaSom("sons/_mouse_over.mp3", FALSE);
-      rest(250);
-      FMOD_System_Release(fmodSis); */ 
         
       setPosicaoX(&menu, 228);
       setPosicaoY(&menu, 348);
       desenhaCenario(local, menu);
+
+
       if(mouse_b){
-          tela = TELA_JOGO;
+          fmodMenu = CarregaSom("sons/_mouse_active.mp3", FMOD_LOOP_OFF);
+          rest(250);
+          FMOD_System_Release(fmodMenu); 
+          tela = TELA_PREPARACAO;
           somCarregado = 0;
+          exibeCarregando(local);
       }
                
    }
    else if((mouse_x >= 349 && mouse_x <= 608) && (mouse_y >= 426 && mouse_y <= 491)){
-      // Testa se esse som já foi carregado
+
                          
       setPosicaoX(&menu, 312);
       setPosicaoY(&menu, 432);
       desenhaCenario(local, menu);
       if(mouse_b){ 
+          fmodMenu = CarregaSom("sons/_mouse_active.mp3", FMOD_LOOP_OFF);
+          rest(250);
+          FMOD_System_Release(fmodMenu); 
           tela = TELA_INSTRUCOES;
-          somCarregado = 0;
       }
          
    }
@@ -373,6 +427,9 @@ int exibeMenu(BITMAP *local){
       setPosicaoY(&menu, 512);
       desenhaCenario(local, menu); 
       if(mouse_b){
+           fmodMenu = CarregaSom("sons/_mouse_active.mp3", FMOD_LOOP_OFF);
+           rest(250);
+           FMOD_System_Release(fmodMenu);
            tela = TELA_SAIR;
            somCarregado = 0;
       }   
@@ -462,7 +519,7 @@ void DefinePosicaoGrade(BITMAP *bmp){
 
 } END_OF_FUNCTION(DefinePosicaoGrade);
 
-void exibeCarregando(){
+void exibeCarregando(BITMAP *local){
 
     BITMAP *img = load_bitmap("imagens/estaticos/carregando.png", NULL);
 
@@ -471,7 +528,7 @@ void exibeCarregando(){
     setImagemCenario(&carregando, img);
     setPosicaoX(&carregando, 0);
     setPosicaoY(&carregando, 0);
-    desenhaCenario(screen, carregando);  
+    desenhaCenario(local, carregando);  
 
 }
 

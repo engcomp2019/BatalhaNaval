@@ -9,10 +9,11 @@
 
 // Define das telas do jogo
 #define TELA_INICIO 0
-#define TELA_JOGO  1
-#define TELA_INSTRUCOES 2
-#define TELA_PERDEU  3
-#define TELA_GANHOU 4
-#define TELA_SAIR 5
+#define TELA_PREPARACAO  1
+#define TELA_JOGO  2
+#define TELA_INSTRUCOES 3
+#define TELA_PERDEU  4
+#define TELA_GANHOU 5
+#define TELA_SAIR 6
 
 BITMAP  *buffer;
