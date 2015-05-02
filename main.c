@@ -16,15 +16,16 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "cenario.h"
 #include "definicoes.h"
-//#include "Jogo.h"
-//#include "som.h"
+#include "cenario.h"
+#include "preparacao.h"
+//#include "Jogo.c"
+#include "som.h"
 
 // Variaveis Globais
 BITMAP  *buffer;
-//FMOD_SYSTEM *fmodCenario = 0;
-//FMOD_SYSTEM *fmodMenu = 0;
+FMOD_SYSTEM *fmodCenario = 0;
+FMOD_SYSTEM *fmodMenu = 0;
 
 // Variaveis Gerais
 int inicioJogo     = 0;           // Flag que indica se o jogo foi iniciado
@@ -90,36 +91,47 @@ int main(){
     BITMAP *bmpCursorMouse  = load_bitmap("imagens/estaticos/mouse.png",NULL);
 
     //Navios da tela de preparação
-    BITMAP *bmpNavioMini     = load_bitmap("imagens/estaticos/n1.png",NULL);
-    stcCenario stcNavioMini;
-    setImagemCenario(&stcNavioMini,bmpNavioMini);
-    setPosicaoX(&stcNavioMini, getStcPosicaoX(mtxPosicaoPreparacao,4));
-    setPosicaoY(&stcNavioMini, getStcPosicaoY(mtxPosicaoPreparacao,4));
+    BITMAP *bmpNavioTamanho2H       = load_bitmap("imagens/estaticos/n2-h.png",NULL);
+    stcCenario stcNavioTamanho2H;
+    setImagemCenario(&stcNavioTamanho2H, bmpNavioTamanho2H);
+    setPosicaoX(&stcNavioTamanho2H, getStcPosicaoX(mtxPosicaoPreparacao,0));
+    setPosicaoY(&stcNavioTamanho2H, getStcPosicaoY(mtxPosicaoPreparacao,0));
 
-    BITMAP *bmpNavioPequeno  = load_bitmap("imagens/estaticos/n2.png",NULL);
-    stcCenario stcNavioPequeno;
-    setImagemCenario(&stcNavioPequeno,bmpNavioPequeno);
-    setPosicaoX(&stcNavioPequeno, 705);
-    setPosicaoY(&stcNavioPequeno, 300);
+    BITMAP *bmpNavioTamanho3aH      = load_bitmap("imagens/estaticos/n3b-h.png",NULL);
+    stcCenario stcNavioTamanho3aH;
+    setImagemCenario(&stcNavioTamanho3aH,bmpNavioTamanho3aH);
+    setPosicaoX(&stcNavioTamanho3aH, getStcPosicaoX(mtxPosicaoPreparacao,3));
+    setPosicaoY(&stcNavioTamanho3aH, getStcPosicaoY(mtxPosicaoPreparacao,0));
 
-    BITMAP *bmpNavioPequenoB = load_bitmap("imagens/estaticos/n3.png",NULL);
-    stcCenario stcNavioPequenoB;
-    setImagemCenario(&stcNavioPequenoB,bmpNavioPequenoB);
-    setPosicaoX(&stcNavioPequenoB, 695);
-    setPosicaoY(&stcNavioPequenoB, 240);
+    BITMAP *bmpNavioTamanho3bH      = load_bitmap("imagens/estaticos/n3b-h.png",NULL);
+    stcCenario stcNavioTamanho3bH;
+    setImagemCenario(&stcNavioTamanho3bH,bmpNavioTamanho3bH);
+    setPosicaoX(&stcNavioTamanho3bH, getStcPosicaoX(mtxPosicaoPreparacao,7));
+    setPosicaoY(&stcNavioTamanho3bH, getStcPosicaoY(mtxPosicaoPreparacao,0));
 
-    BITMAP *bmpNavioMedio    = load_bitmap("imagens/estaticos/n4.png",NULL);
-    stcCenario stcNavioMedio;
-    setImagemCenario(&stcNavioMedio,bmpNavioMedio);
-    setPosicaoX(&stcNavioMedio, 674);
-    setPosicaoY(&stcNavioMedio, 180);
+    BITMAP *bmpNavioTamanho4H       = load_bitmap("imagens/estaticos/n4-h.png",NULL);
+    stcCenario stcNavioTamanho4H;
+    setImagemCenario(&stcNavioTamanho4H,bmpNavioTamanho4H);
+    setPosicaoX(&stcNavioTamanho4H, getStcPosicaoX(mtxPosicaoPreparacao,0));
+    setPosicaoY(&stcNavioTamanho4H, getStcPosicaoY(mtxPosicaoPreparacao,1));
+    
 
-    BITMAP *bmpNavioGrande   = load_bitmap("imagens/estaticos/n5.png",NULL);
-    stcCenario stcNavioGrande;
-    setImagemCenario(&stcNavioGrande,bmpNavioGrande);
-    setPosicaoX(&stcNavioGrande, 660);
-    setPosicaoY(&stcNavioGrande, 120);
+    //Navios da tela de preparacao na vertical.
+    BITMAP *bmpNavioTamanho2V       = load_bitmap("imagens/estaticos/n2-v.png",NULL);
+    stcCenario stcNavioTamanho2V;
+    setImagemCenario(&stcNavioTamanho2V,bmpNavioTamanho2V);
 
+    BITMAP *bmpNavioTamanho3aV      = load_bitmap("imagens/estaticos/n3b-v.png",NULL);
+    stcCenario stcNavioTamanho3aV;
+    setImagemCenario(&stcNavioTamanho3aV, bmpNavioTamanho3aV);
+
+    BITMAP *bmpNavioTamanho3bV      = load_bitmap("imagens/estaticos/n3b-v.png",NULL);
+    stcCenario stcNavioTamanho3bV;
+    setImagemCenario(&stcNavioTamanho3bV, bmpNavioTamanho3bV);
+
+    BITMAP *bmpNavioTamanho4V       = load_bitmap("imagens/estaticos/n4-v.png",NULL);
+    stcCenario stcNavioTamanho4V;
+    setImagemCenario(&stcNavioTamanho4V, bmpNavioTamanho4V);
 
     // inicia o loop do jogo
     while(!fimJogo){
@@ -135,7 +147,9 @@ int main(){
                           // Testa se esse som já foi carregado
                           if(!somCarregado){
                              // Inicia o som do cenário
-                             //fmodCenario = CarregaSom("sons/_entrada.mp3", FMOD_LOOP_NORMAL);
+                             FMOD_System_Release(fmodCenario);
+                             rest(250);
+                             fmodCenario = CarregaSom("sons/_entrada.mp3", FMOD_LOOP_NORMAL);
                              somCarregado = 1;
                           }
 
@@ -146,22 +160,30 @@ int main(){
 
                      case TELA_PREPARACAO:
 
-                          // Testa se esse som já foi carregado
+                          // Testa se esse som ja foi carregado
                           if(!somCarregado){
                              // Inicia o som do cenário
-                             //FMOD_System_Release(fmodCenario);
-                             //rest(250);
-                             //fmodCenario = CarregaSom("sons/_preparar.mp3", FMOD_LOOP_OFF);
+                             FMOD_System_Release(fmodCenario);
+                             rest(250);
+                             fmodCenario = CarregaSom("sons/_preparar.mp3", FMOD_LOOP_OFF);
                              somCarregado = 1;
-
                           }
-
+                          
                           desenhaCenario(buffer, preparacao);
-                          desenhaCenario(buffer, stcNavioGrande);
-                          desenhaCenario(buffer, stcNavioMedio);
-                          desenhaCenario(buffer, stcNavioPequenoB);
-                          desenhaCenario(buffer, stcNavioPequeno);
-                          desenhaCenario(buffer, stcNavioMini);
+                          desenhaCenario(buffer, stcNavioTamanho4H);
+                          desenhaCenario(buffer, stcNavioTamanho3bH);
+                          desenhaCenario(buffer, stcNavioTamanho3aH);
+                          desenhaCenario(buffer, stcNavioTamanho2H);
+
+                          
+                          // Bot�o Voltar
+                          if(mouse_b && (mouse_x >= 0 && mouse_x <= 80) && (mouse_y >= 517 && mouse_y <= 550)){
+                             somCarregado = 0;
+                             telaAtual = TELA_INICIO;
+                          }// Bot�o Iniciar
+                          else if(mouse_b && (mouse_x >= 395 && mouse_x <= 490) && (mouse_y >= 520 && mouse_y <= 548)){
+                             telaAtual = TELA_INICIO;
+                          }
                           //fimJogo = verificaSaida(telaAtual);
 
                           break;
@@ -169,7 +191,6 @@ int main(){
                      case TELA_JOGO:
 
                           //telaAtual = batalhaNaval();
-
                         /*
                           if(!inicioJogo){
 
@@ -191,7 +212,7 @@ int main(){
                           blit(gradeTabuleiroCores, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
                           blit(fundoAgua, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
                         */
-
+                        
                           break;
 
                      case TELA_INSTRUCOES:
@@ -223,7 +244,7 @@ int main(){
               // Se pressionou a tecla ESC, entao finaliza o jogo.
               if (key[KEY_ESC]){
                   somCarregado = 0;
-                  //FMOD_System_Release(fmodCenario);
+                  FMOD_System_Release(fmodCenario);
                   telaAtual = TELA_INICIO;
               }
 
@@ -383,13 +404,14 @@ int exibeMenu(BITMAP *local){
 
       setPosicaoX(&menu, 228);
       setPosicaoY(&menu, 348);
+
       desenhaCenario(local, menu);
+      
 
-
-      if(mouse_b){
-          //fmodMenu = CarregaSom("sons/_mouse_active.mp3", FMOD_LOOP_OFF);
-          //rest(250);
-          //FMOD_System_Release(fmodMenu);
+      if(mouse_b & 1){
+          fmodMenu = CarregaSom("sons/_mouse_active.mp3", FMOD_LOOP_OFF);
+          rest(250);
+          FMOD_System_Release(fmodMenu);
           tela = TELA_PREPARACAO;
           somCarregado = 0;
           exibeCarregando(local);
@@ -402,10 +424,10 @@ int exibeMenu(BITMAP *local){
       setPosicaoX(&menu, 312);
       setPosicaoY(&menu, 432);
       desenhaCenario(local, menu);
-      if(mouse_b){
-          //fmodMenu = CarregaSom("sons/_mouse_active.mp3", FMOD_LOOP_OFF);
-          //rest(250);
-          //FMOD_System_Release(fmodMenu);
+      if(mouse_b & 1){
+          fmodMenu = CarregaSom("sons/_mouse_active.mp3", FMOD_LOOP_OFF);
+          rest(250);
+          FMOD_System_Release(fmodMenu);
           tela = TELA_INSTRUCOES;
       }
 
@@ -415,10 +437,10 @@ int exibeMenu(BITMAP *local){
       setPosicaoX(&menu, 544);
       setPosicaoY(&menu, 512);
       desenhaCenario(local, menu);
-      if(mouse_b){
-           //fmodMenu = CarregaSom("sons/_mouse_active.mp3", FMOD_LOOP_OFF);
-           //rest(250);
-           //FMOD_System_Release(fmodMenu);
+      if(mouse_b & 1){
+           fmodMenu = CarregaSom("sons/_mouse_active.mp3", FMOD_LOOP_OFF);
+           rest(250);
+           FMOD_System_Release(fmodMenu);
            tela = TELA_SAIR;
            somCarregado = 0;
       }
@@ -538,7 +560,7 @@ int verificaSaida(int opcao){
 void carregaAnimacao
 
 Carrega diversos arquivos PNG para se criar uma animacao.
-As informações necessarias serao passada atraves de parâmetros.
+As informa��es necessarias serao passada atraves de par�metros.
 
 ================================================================================
 */
@@ -562,28 +584,26 @@ void populaPreparacao(stcPosicao oPosicaoPreparacao[][TAB_DIM]){
 int linha  = 0;
 int coluna = 0;
 int ind    = 0;
-
+    
+    // Inicio do loop que varre as linhas  
     for(linha = 0; linha < 10; linha++){
+        // Inicio do loop que varre as colunas        
         for (coluna = 0;coluna < 10; coluna++){
 
             if(linha == 0 && coluna == 0){
-                setStcPosicaoX(oPosicaoPreparacao, 229, linha, coluna);
-                setStcPosicaoY(oPosicaoPreparacao, 141, linha, coluna);
+                setStcPosicaoX(oPosicaoPreparacao, 116, linha, coluna);
+                setStcPosicaoY(oPosicaoPreparacao, 169, linha, coluna);
                 setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
                 ind ++;
             }
             else{
-                setStcPosicaoX(oPosicaoPreparacao,oPosicaoPreparacao[linha-1][coluna-1].posicaoX + 35,linha,coluna);
+                setStcPosicaoX(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoX + 33),linha,coluna);
+                setStcPosicaoY(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoY + 33),linha,coluna);
                 setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
                 ind ++;
             }
 
-        }
-        if(linha != 0){
+        }// Fim do loop que varre as colunas 
 
-            setStcPosicaoY(oPosicaoPreparacao,oPosicaoPreparacao[linha-1][coluna-1].posicaoY + 35,linha,coluna);
-
-        }
-
-    }
+    }// Fim do loop que varre as linhas  
 }
