@@ -20,10 +20,10 @@ Recebe os valores da imagem do cenário e sua posição em X e Y.
 ================================================================================
 */
 typedef struct{
-    
+
     BITMAP *imagem;
     float posicaoX, posicaoY;
-    
+
 }stcCenario;
 /* FIM - struct stcCenario ================================================== */
 
@@ -58,9 +58,9 @@ Define a imagem do cenário na estrutura
 */
 
 void setImagemCenario(stcCenario *oCenario, BITMAP *img){
-    
+
     oCenario->imagem = img;
-    
+
 }
 END_OF_FUNCTION(setImagemCenario);
 
@@ -78,9 +78,9 @@ Retorna a imagem do cenário contido na estrutura
 */
 
 BITMAP *getImagemCenario(stcCenario oCenario){
-    
+
     return oCenario.imagem;
-    
+
 }
 END_OF_FUNCTION(getImagemCenario);
 
@@ -98,9 +98,9 @@ Define a posicao X da imagem em relação ao cenário
 */
 
 void setPosicaoX(stcCenario *oCenario, float posX){
-    
+
     oCenario->posicaoX = posX;
-    
+
 }
 END_OF_FUNCTION(setPosicaoX);
 
@@ -118,9 +118,9 @@ Retorna a posicao X da imagem em relação ao cenário
 */
 
 float getPosicaoX(stcCenario oCenario){
-    
+
     return oCenario.posicaoX;
-    
+
 }
 END_OF_FUNCTION(getPosicaoX);
 
@@ -138,9 +138,9 @@ Define a posicao em Y da imagem em relação ao cenário
 */
 
 void setPosicaoY(stcCenario *oCenario, float posY){
-    
+
     oCenario->posicaoY = posY;
-    
+
 }
 END_OF_FUNCTION(setPosicaoY);
 
@@ -158,9 +158,9 @@ Retorna a posicao em Y da imagem em relação ao cenário
 */
 
 float getPosicaoY(stcCenario oCenario){
-    
+
     return oCenario.posicaoY;
-    
+
 }
 END_OF_FUNCTION(getPosicaoY);
 
@@ -180,9 +180,7 @@ Desenha o cenário no buffer utilizando os argumentos passados.
 
 void desenhaCenario(BITMAP *oBuffer, stcCenario oCenario){
 
-     
-     //draw_trans_sprite(bitmap destino, bitmap origem, x do destino, y do destino)
-     draw_trans_sprite(oBuffer, getImagemCenario(oCenario), getPosicaoX(oCenario), getPosicaoY(oCenario));    
+     draw_trans_sprite(oBuffer, getImagemCenario(oCenario), getPosicaoX(oCenario), getPosicaoY(oCenario));
 }
 END_OF_FUNCTION(desenhaCenario)
 
