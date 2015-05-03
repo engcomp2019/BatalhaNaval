@@ -672,6 +672,7 @@ int ind    = 0;
             }
 
         }// Fim do loop que varre as colunas
+        coluna = 0;
 
     }// Fim do loop que varre as linhas
 }
@@ -760,8 +761,8 @@ int batalhaNaval(){
   BITMAP *bpmNavioTamanho2H       = load_bitmap("imagens/sprites/barco/normal/navio2H.png",NULL);
   stcCenario stcNavioTamanho2H;
   setImagemCenario(&stcNavioTamanho2H, bpmNavioTamanho2H);
-  setPosicaoX(&stcNavioTamanho2H, getStcTabuleiroJogoX(stcTabuleiroPlayer,10));
-  setPosicaoY(&stcNavioTamanho2H, getStcTabuleiroJogoY(stcTabuleiroPlayer,10));
+  setPosicaoX(&stcNavioTamanho2H, getStcTabuleiroJogoX(stcTabuleiroPlayer,98));
+  setPosicaoY(&stcNavioTamanho2H, getStcTabuleiroJogoY(stcTabuleiroPlayer,98));
 
   //Mouse
   BITMAP *bmpCursorMouse          = load_bitmap("imagens/estaticos/mouse.png",NULL);
