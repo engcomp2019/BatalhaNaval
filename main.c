@@ -656,7 +656,7 @@ int ind    = 0;
             if(linha == 0 && coluna == 0){
 
                 setStcTabuleiroJogoX(oTabuleiroJogo, 48, linha, coluna);
-                setStcTabuleiroJogoY(oTabuleiroJogo, 120, linha, coluna);
+                setStcTabuleiroJogoY(oTabuleiroJogo, 30, linha, coluna);
                 setStcTabuleiroJogoIndice(oTabuleiroJogo, ind, linha, coluna);
             }
             else if(coluna != 0){
