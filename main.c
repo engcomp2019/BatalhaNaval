@@ -19,6 +19,7 @@
 #include "definicoes.h"
 #include "cenario.h"
 #include "preparacao.h"
+#include "jogo.h"
 //#include "som.h"
 
 // Variaveis Globais
@@ -41,7 +42,7 @@ void Inicializa();
 void Finaliza();
 void VelocidadeJogo();
 void CalculaFPS();
-int batalhaNaval();
+
 
 void exibeCarregando(BITMAP *local);
 int  exibeMenu(BITMAP *local);
@@ -56,7 +57,8 @@ void carregaAnimacao(BITMAP *imagem[], char *pasta, int frames);
 int  verificaSaida(int opcao);
 
 void populaPreparacao(stcPosicao oPosicaoPreparacao[][TAB_DIM]);
-
+void populaTabuleiroJogo(stcTabuleiroJogo oTabuleiroPlayer[][TAB_DIM]);
+int batalhaNaval();
 
 //FunÃ§Ã£o Main
 int main(){
@@ -583,6 +585,17 @@ void carregaAnimacao(BITMAP *imagem[], char *pasta, int frames){
 }
 
 
+/*
+================================================================================
+void populaPreparacao
+
+ Está função é responsavel por popular a matriz com as posições de X e Y
+e os indices de cada uma das posições de acordo com a imagem do tabuleiro
+da tela de preparação.
+
+================================================================================
+*/
+
 void populaPreparacao(stcPosicao oPosicaoPreparacao[][TAB_DIM]){
 
 int linha  = 0;
@@ -615,6 +628,57 @@ int ind    = 0;
 
 /*
 ================================================================================
+void populaTabuleiroJogo
+
+ Está função é responsavel por popular a matriz com as posições de X e Y
+e os indices de cada uma das posições de acordo com a imagem dos tabuleiros
+principais do jogo.
+
+================================================================================
+*/
+
+void populaTabuleiroJogo(stcTabuleiroJogo oTabuleiroJogo[][TAB_DIM]){
+
+int linha  = 0;
+int coluna = 0;
+int ind    = 0;
+
+    // Inicio do loop que varre as linhas
+    for(linha = 0; linha < 10; linha++){
+
+        if(linha != 0 && coluna == 0){
+
+            ind++;
+            setStcTabuleiroJogoX(oTabuleiroJogo,(oTabuleiroJogo[linha -1][coluna].posicaoX + 24),linha,coluna);
+            setStcTabuleiroJogoY(oTabuleiroJogo,(oTabuleiroJogo[linha -1][coluna].posicaoY + 15),linha,coluna);
+            setStcTabuleiroJogoIndice(oTabuleiroJogo,ind,linha,coluna);
+
+        }
+
+        // Inicio do loop que varre as colunas
+        for (coluna = 0;coluna < 10; coluna++){
+            if(linha == 0 && coluna == 0){
+
+                setStcTabuleiroJogoX(oTabuleiroJogo, 48, linha, coluna);
+                setStcTabuleiroJogoY(oTabuleiroJogo, 120, linha, coluna);
+                setStcTabuleiroJogoIndice(oTabuleiroJogo, ind, linha, coluna);
+            }
+            else if(coluna != 0){
+
+                ind ++;
+                setStcTabuleiroJogoX(oTabuleiroJogo,(oTabuleiroJogo[linha][coluna-1].posicaoX + 24),linha,coluna);
+                setStcTabuleiroJogoY(oTabuleiroJogo,(oTabuleiroJogo[linha][coluna-1].posicaoY - 15),linha,coluna);
+                setStcTabuleiroJogoIndice(oTabuleiroJogo, ind, linha, coluna);
+            }
+
+        }// Fim do loop que varre as colunas
+
+    }// Fim do loop que varre as linhas
+}
+
+
+/*
+================================================================================
 void batalhaNaval
 
 Carrega diversos arquivos PNG para se criar uma animacao.
@@ -626,14 +690,18 @@ As informações necessarias serao passada atraves de parâmetros.
 int batalhaNaval(){
 
   /**************************************************************************
-  Iniciando structs
+  Matriz para controle
   ***************************************************************************/
+  stcTabuleiroJogo stcTabuleiroPlayer[TAB_DIM][TAB_DIM];
+
+  populaTabuleiroJogo(stcTabuleiroPlayer);
 
   /**************************************************************************
   Iniciando Bitmaps
   ***************************************************************************/
 
   clear(buffer);
+
   //Telas
   BITMAP *bmpFundoAgua     = load_bitmap("imagens/estaticos/agua.png",NULL);
   stcCenario stcFundoAgua;
@@ -692,8 +760,8 @@ int batalhaNaval(){
   BITMAP *bpmNavioTamanho2H       = load_bitmap("imagens/sprites/barco/normal/navio2H.png",NULL);
   stcCenario stcNavioTamanho2H;
   setImagemCenario(&stcNavioTamanho2H, bpmNavioTamanho2H);
-  setPosicaoX(&stcNavioTamanho2H, 48);
-  setPosicaoY(&stcNavioTamanho2H, 120);
+  setPosicaoX(&stcNavioTamanho2H, getStcTabuleiroJogoX(stcTabuleiroPlayer,10));
+  setPosicaoY(&stcNavioTamanho2H, getStcTabuleiroJogoY(stcTabuleiroPlayer,10));
 
   //Mouse
   BITMAP *bmpCursorMouse          = load_bitmap("imagens/estaticos/mouse.png",NULL);
@@ -745,6 +813,11 @@ int batalhaNaval(){
 
           textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, "Mouse X: %d", mouse_x);
           textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Mouse Y: %d", mouse_y);
+          //textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "Indice 11 X: %d", getStcTabuleiroJogoX(stcTabuleiroPlayer,11));
+          //textprintf_ex( buffer, font, 10, 40, makecol(255,0,0), -1, "Indice 11 Y: %d", getStcTabuleiroJogoY(stcTabuleiroPlayer,11));
+          //textprintf_ex( buffer, font, 10, 50, makecol(255,0,0), -1, "Indice 10 X: %d", getStcTabuleiroJogoX(stcTabuleiroPlayer,10));
+          //textprintf_ex( buffer, font, 10, 60, makecol(255,0,0), -1, "Indice 10 Y: %d", getStcTabuleiroJogoY(stcTabuleiroPlayer,10));
+          //textprintf_ex( buffer, font, 10, 70, makecol(255,0,0), -1, "Indice : %d", getStcTabuleiroJogoIndice(stcTabuleiroPlayer,72,135));
 
           blit(buffer, screen, 0, 0, 0, 0, JANELA_LARGURA, JANELA_ALTURA);
 
