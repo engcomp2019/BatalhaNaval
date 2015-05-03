@@ -18,3 +18,11 @@
 #define TELA_PERDEU  4
 #define TELA_GANHOU 5
 #define TELA_SAIR 6
+
+
+//Testes Navios
+
+#define TESTENAVIO2H  0
+#define TESTENAVIO3AH 20
+#define TESTENAVIO3BH 35
+#define TESTENAVIO4H  86
