@@ -96,26 +96,26 @@ int main(){
     BITMAP *bmpNavioTamanho2H       = load_bitmap("imagens/estaticos/n2-h.png",NULL);
     stcCenario stcNavioTamanho2H;
     setImagemCenario(&stcNavioTamanho2H, bmpNavioTamanho2H);
-    setPosicaoX(&stcNavioTamanho2H, getStcPosicaoX(mtxPosicaoPreparacao,0));
-    setPosicaoY(&stcNavioTamanho2H, getStcPosicaoY(mtxPosicaoPreparacao,0));
+    setPosicaoX(&stcNavioTamanho2H, getStcPosicaoX(mtxPosicaoPreparacao,TESTENAVIO2H));
+    setPosicaoY(&stcNavioTamanho2H, getStcPosicaoY(mtxPosicaoPreparacao,TESTENAVIO2H));
 
     BITMAP *bmpNavioTamanho3aH      = load_bitmap("imagens/estaticos/n3b-h.png",NULL);
     stcCenario stcNavioTamanho3aH;
     setImagemCenario(&stcNavioTamanho3aH,bmpNavioTamanho3aH);
-    setPosicaoX(&stcNavioTamanho3aH, getStcPosicaoX(mtxPosicaoPreparacao,3));
-    setPosicaoY(&stcNavioTamanho3aH, getStcPosicaoY(mtxPosicaoPreparacao,0));
+    setPosicaoX(&stcNavioTamanho3aH, getStcPosicaoX(mtxPosicaoPreparacao,TESTENAVIO3AH));
+    setPosicaoY(&stcNavioTamanho3aH, getStcPosicaoY(mtxPosicaoPreparacao,TESTENAVIO3AH));
 
     BITMAP *bmpNavioTamanho3bH      = load_bitmap("imagens/estaticos/n3b-h.png",NULL);
     stcCenario stcNavioTamanho3bH;
     setImagemCenario(&stcNavioTamanho3bH,bmpNavioTamanho3bH);
-    setPosicaoX(&stcNavioTamanho3bH, getStcPosicaoX(mtxPosicaoPreparacao,7));
-    setPosicaoY(&stcNavioTamanho3bH, getStcPosicaoY(mtxPosicaoPreparacao,0));
+    setPosicaoX(&stcNavioTamanho3bH, getStcPosicaoX(mtxPosicaoPreparacao,TESTENAVIO3BH));
+    setPosicaoY(&stcNavioTamanho3bH, getStcPosicaoY(mtxPosicaoPreparacao,TESTENAVIO3BH));
 
     BITMAP *bmpNavioTamanho4H       = load_bitmap("imagens/estaticos/n4-h.png",NULL);
     stcCenario stcNavioTamanho4H;
     setImagemCenario(&stcNavioTamanho4H,bmpNavioTamanho4H);
-    setPosicaoX(&stcNavioTamanho4H, getStcPosicaoX(mtxPosicaoPreparacao,0));
-    setPosicaoY(&stcNavioTamanho4H, getStcPosicaoY(mtxPosicaoPreparacao,1));
+    setPosicaoX(&stcNavioTamanho4H, getStcPosicaoX(mtxPosicaoPreparacao,TESTENAVIO4H));
+    setPosicaoY(&stcNavioTamanho4H, getStcPosicaoY(mtxPosicaoPreparacao,TESTENAVIO4H));
 
 
     //Navios da tela de preparacao na vertical.
@@ -197,27 +197,6 @@ int main(){
                             telaAtual = batalhaNaval();
                             inicioJogo = 1;
                           }
-                          /*
-                          if(!inicioJogo){
-
-                             somCarregado = 0;
-                             // Exibe a mensagem de carregando na tela
-                             exibeCarregando(screen);
-                             inicioJogo = 1;
-                             FMOD_System_Release(fmodCenario);
-                          }
-
-                           // Testa se esse som já foi carregado
-                          if(!somCarregado){
-                             // Inicia o som do cenário
-                             rest(250);
-                             fmodCenario = CarregaSom("sons/_oceano.mp3", FMOD_LOOP_NORMAL);
-                             somCarregado = 1;
-                          }
-
-                          blit(gradeTabuleiroCores, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
-                          blit(fundoAgua, buffer,0,0,0,0,JANELA_LARGURA, JANELA_ALTURA);
-                        */
 
                           break;
 
@@ -266,6 +245,14 @@ int main(){
         //Exibe posição X e Y do Mouse
         textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "Mouse X: %d", mouse_x);
         textprintf_ex( buffer, font, 10, 40, makecol(255,0,0), -1, "Mouse Y: %d", mouse_y);
+        textprintf_ex( buffer, font, 10, 50, makecol(255,0,0), -1, "Indice 9 X: %d", getStcPosicaoX(mtxPosicaoPreparacao,9));
+        textprintf_ex( buffer, font, 10, 60, makecol(255,0,0), -1, "Indice 9 Y: %d", getStcPosicaoY(mtxPosicaoPreparacao,9));
+        textprintf_ex( buffer, font, 10, 70, makecol(255,0,0), -1, "Indice 10 X: %d", getStcPosicaoX(mtxPosicaoPreparacao,10));
+        textprintf_ex( buffer, font, 10, 80, makecol(255,0,0), -1, "Indice 10 Y: %d", getStcPosicaoY(mtxPosicaoPreparacao,10));
+        textprintf_ex( buffer, font, 10, 90, makecol(255,0,0), -1, "Indice 11 X: %d", getStcPosicaoX(mtxPosicaoPreparacao,11));
+        textprintf_ex( buffer, font, 10, 100, makecol(255,0,0), -1, "Indice 11 Y: %d", getStcPosicaoY(mtxPosicaoPreparacao,11));
+
+
 
         // Desenha mouse na tela com imagem
         draw_trans_sprite(buffer, bmpCursorMouse, mouse_x, mouse_y);
@@ -604,6 +591,14 @@ int ind    = 0;
 
     // Inicio do loop que varre as linhas
     for(linha = 0; linha < 10; linha++){
+
+        if(linha != 0 && coluna == 0){
+            ind ++;
+            setStcPosicaoX(oPosicaoPreparacao,oPosicaoPreparacao[linha -1][coluna].posicaoX,linha,coluna);
+            setStcPosicaoY(oPosicaoPreparacao,(oPosicaoPreparacao[linha -1][coluna].posicaoY + 33),linha,coluna);
+            setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
+        }
+
         // Inicio do loop que varre as colunas
         for (coluna = 0;coluna < 10; coluna++){
 
@@ -611,16 +606,17 @@ int ind    = 0;
                 setStcPosicaoX(oPosicaoPreparacao, 116, linha, coluna);
                 setStcPosicaoY(oPosicaoPreparacao, 169, linha, coluna);
                 setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
-                ind ++;
             }
-            else{
-                setStcPosicaoX(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoX + 33),linha,coluna);
-                setStcPosicaoY(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoY + 33),linha,coluna);
-                setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
+            else if(coluna != 0){
                 ind ++;
+                setStcPosicaoX(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoX + 33),linha,coluna);
+                setStcPosicaoY(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoY),linha,coluna);
+                setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
             }
 
         }// Fim do loop que varre as colunas
+
+        coluna = 0;
 
     }// Fim do loop que varre as linhas
 }
@@ -761,8 +757,26 @@ int batalhaNaval(){
   BITMAP *bpmNavioTamanho2H       = load_bitmap("imagens/sprites/barco/normal/navio2H.png",NULL);
   stcCenario stcNavioTamanho2H;
   setImagemCenario(&stcNavioTamanho2H, bpmNavioTamanho2H);
-  setPosicaoX(&stcNavioTamanho2H, getStcTabuleiroJogoX(stcTabuleiroPlayer,98));
-  setPosicaoY(&stcNavioTamanho2H, getStcTabuleiroJogoY(stcTabuleiroPlayer,98));
+  setPosicaoX(&stcNavioTamanho2H, getStcTabuleiroJogoX(stcTabuleiroPlayer,TESTENAVIO2H));
+  setPosicaoY(&stcNavioTamanho2H, getStcTabuleiroJogoY(stcTabuleiroPlayer,TESTENAVIO2H));
+
+  BITMAP *bpmNavioTamanho3aH       = load_bitmap("imagens/sprites/barco/normal/navio3aH.png",NULL);
+  stcCenario stcNavioTamanho3aH;
+  setImagemCenario(&stcNavioTamanho3aH, bpmNavioTamanho3aH);
+  setPosicaoX(&stcNavioTamanho3aH, getStcTabuleiroJogoX(stcTabuleiroPlayer,TESTENAVIO3AH));
+  setPosicaoY(&stcNavioTamanho3aH, getStcTabuleiroJogoY(stcTabuleiroPlayer,TESTENAVIO3AH));
+
+  BITMAP *bpmNavioTamanho3bH       = load_bitmap("imagens/sprites/barco/normal/navio3bH.png",NULL);
+  stcCenario stcNavioTamanho3bH;
+  setImagemCenario(&stcNavioTamanho3bH, bpmNavioTamanho3bH);
+  setPosicaoX(&stcNavioTamanho3bH, getStcTabuleiroJogoX(stcTabuleiroPlayer,TESTENAVIO3BH));
+  setPosicaoY(&stcNavioTamanho3bH, getStcTabuleiroJogoY(stcTabuleiroPlayer,TESTENAVIO3BH));
+
+  BITMAP *bpmNavioTamanho4H       = load_bitmap("imagens/sprites/barco/normal/navio4H.png",NULL);
+  stcCenario stcNavioTamanho4H;
+  setImagemCenario(&stcNavioTamanho4H, bpmNavioTamanho4H);
+  setPosicaoX(&stcNavioTamanho4H, getStcTabuleiroJogoX(stcTabuleiroPlayer,TESTENAVIO4H));
+  setPosicaoY(&stcNavioTamanho4H, getStcTabuleiroJogoY(stcTabuleiroPlayer,TESTENAVIO4H));
 
   //Mouse
   BITMAP *bmpCursorMouse          = load_bitmap("imagens/estaticos/mouse.png",NULL);
@@ -807,6 +821,9 @@ int batalhaNaval(){
           desenhaCenario(buffer,stcIlhaInferiorEsquerda);
           desenhaCenario(buffer,stcIlhaInferiorDireita);
           desenhaCenario(buffer,stcNavioTamanho2H);
+          desenhaCenario(buffer,stcNavioTamanho3aH);
+          desenhaCenario(buffer,stcNavioTamanho3bH);
+          desenhaCenario(buffer,stcNavioTamanho4H);
           desenhaCenario(buffer,stcRodapeOpcoes);
 
 
