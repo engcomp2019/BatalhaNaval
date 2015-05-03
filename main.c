@@ -692,8 +692,8 @@ int batalhaNaval(){
   BITMAP *bpmNavioTamanho2H       = load_bitmap("imagens/sprites/barco/normal/navio2H.png",NULL);
   stcCenario stcNavioTamanho2H;
   setImagemCenario(&stcNavioTamanho2H, bpmNavioTamanho2H);
-  setPosicaoX(&stcNavioTamanho2H, 240);
-  setPosicaoY(&stcNavioTamanho2H, 154);
+  setPosicaoX(&stcNavioTamanho2H, 48);
+  setPosicaoY(&stcNavioTamanho2H, 120);
 
   //Mouse
   BITMAP *bmpCursorMouse          = load_bitmap("imagens/estaticos/mouse.png",NULL);
