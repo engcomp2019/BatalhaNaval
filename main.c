@@ -874,6 +874,7 @@ int batalhaNaval(){
         }
 
           draw_trans_sprite(buffer,bmpMoveAgua,-(aguaMovimentoX / aguaMovimentoFator),0);
+          
           desenhaCenario(buffer,stcGradeTabuleiro);
           desenhaCenario(buffer,stcIlhaSuperiorEsquerda);
           desenhaCenario(buffer,stcIlhaSuperiorDireita);
@@ -884,15 +885,24 @@ int batalhaNaval(){
           desenhaCenario(buffer,stcNavioTamanho3bH);
           desenhaCenario(buffer,stcNavioTamanho4H);*/
 
+          //Abre comunicação com Serial
+          IniciaSerial(PORTA,VELOCIDADEPORTA);
+
+          //Desenha Navios 
           desenhaCenario(buffer,stcNavioTamanho2V);
+          ArduinoInteracao(TESTENAVIO2V);
+
           desenhaCenario(buffer,stcNavioTamanho3aV);
+          ArduinoInteracao(TESTENAVIO3AV);
+
           desenhaCenario(buffer,stcNavioTamanho3bV);
+          ArduinoInteracao(TESTENAVIO3BV);
+
           desenhaCenario(buffer,stcNavioTamanho4V);
+          ArduinoInteracao(TESTENAVIO4V);
 
           desenhaCenario(buffer,stcRodapeOpcoes);
 
-
-          
 
           textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, "Mouse X: %d", mouse_x);
           textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Mouse Y: %d", mouse_y);
