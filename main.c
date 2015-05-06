@@ -903,7 +903,8 @@ int batalhaNaval(){
 
           desenhaCenario(buffer,stcRodapeOpcoes);
 
-
+          fechaSerial();
+          
           textprintf_ex( buffer, font, 10, 10, makecol(255,0,0), -1, "Mouse X: %d", mouse_x);
           textprintf_ex( buffer, font, 10, 20, makecol(255,0,0), -1, "Mouse Y: %d", mouse_y);
           //textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "Indice 11 X: %d", getStcTabuleiroJogoX(stcTabuleiroPlayer,11));
