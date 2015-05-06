@@ -31,3 +31,7 @@
 #define TESTENAVIO3AV 21
 #define TESTENAVIO3BV 45
 #define TESTENAVIO4V  60
+
+//Portas Arduino
+#define VELOCIDADEPORTA 9600
+#define PORTA 'COM3'
