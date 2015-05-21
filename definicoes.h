@@ -22,16 +22,26 @@
 
 //Testes Navios
 
-#define TESTENAVIO2H  0
-#define TESTENAVIO3AH 21
-#define TESTENAVIO3BH 35
-#define TESTENAVIO4H  80
+#define P1_NAVIO2H  0
+#define P1_NAVIO3AH 21
+#define P1_NAVIO3BH 35
+#define P1_NAVIO4H  80
 
-#define TESTENAVIO2V  8
-#define TESTENAVIO3AV 21
-#define TESTENAVIO3BV 45
-#define TESTENAVIO4V  60
+#define P1_NAVIO2V  8
+#define P1_NAVIO3AV 21
+#define P1_NAVIO3BV 45
+#define P1_NAVIO4V  60
+
+#define P2_NAVIO2H  05
+#define P2_NAVIO3AH 21
+#define P2_NAVIO3BH 35
+#define P2_NAVIO4H  80
+
+#define P2_NAVIO2V  8
+#define P2_NAVIO3AV 21
+#define P2_NAVIO3BV 45
+#define P2_NAVIO4V  60
 
 //Portas Arduino
 #define VELOCIDADEPORTA 9600
-#define PORTA 'COM3'
+#define PORTA "COM3"
