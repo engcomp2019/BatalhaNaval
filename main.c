@@ -51,20 +51,19 @@ void Finaliza();
 void VelocidadeJogo();
 void CalculaFPS();
 
-void exibeCarregando(BITMAP *local);
-int  exibeMenu(BITMAP *local);
-int  exibeInicial(BITMAP *origem, BITMAP *destino);
-void exibeJogo();
-void exibeInstrucoes(BITMAP *origem, BITMAP *destino);
-void exibeResultado(int *resultado);
-
 void definePosicaoGrade(BITMAP *bmp);
 void carregaAnimacao(BITMAP *imagem[], char *pasta, int frames);
 int  verificaSaida(int opcao);
 
 void populaPreparacao(stcPosicao oPosicaoPreparacao[][TAB_DIM]);
 void populaTabuleiroJogo(stcTabuleiroJogo oTabuleiroPlayer[][TAB_DIM]);
-int batalhaNaval();
+
+void exibeCarregando(BITMAP *local);
+int  exibeMenu(BITMAP *local);
+int  exibeInicial(BITMAP *origem, BITMAP *destino);
+int  exibeJogo();
+void exibeInstrucoes(BITMAP *origem, BITMAP *destino);
+void exibeResultado(int *resultado);
 
 //Função Main
 int main(){
@@ -156,15 +155,13 @@ int main(){
 
                      case TELA_INICIO:
 
-                          clear(buffer);
-
                           // Testa se esse som já foi carregado
                           if(!somCarregado){
                              // Inicia o som do cenário
-                             /*FMOD_System_Release(fmodCenario);
+                             FMOD_System_Release(fmodCenario);
                              rest(250);
                              fmodCenario = CarregaSom("sons/_entrada.mp3", FMOD_LOOP_NORMAL);
-                             somCarregado = 1;*/
+                             somCarregado = 1;
                           }
 
                           desenhaCenario(buffer, intro);
@@ -173,8 +170,6 @@ int main(){
                           break;
 
                      case TELA_PREPARACAO:
-                          
-                          clear(buffer);
 
                           // Testa se esse som ja foi carregado
                           if(!somCarregado){
@@ -202,17 +197,26 @@ int main(){
                              somCarregado = 0;
                              telaAtual = TELA_INICIO;
                           }// Botão Iniciar
-                          else if(mouse_b & 1 && (mouse_x >= 395 && mouse_x <= 490) && (mouse_y >= 520 && mouse_y <= 548)){
-                             somCarregado = 0;
-                             telaAtual = TELA_JOGO;
+                          else if((mouse_x >= 395 && mouse_x <= 490) && (mouse_y >= 520 && mouse_y <= 548)){
+
+                             BITMAP *iniHover = load_bitmap("imagens/estaticos/btn-iniciar.png", NULL);
+                             stcCenario iniciar;
+                             setImagemCenario(&iniciar, iniHover);
+                             setPosicaoX(&iniciar, 386);
+                             setPosicaoY(&iniciar, 516);
+
+                             desenhaCenario(buffer, iniciar);
+
+                             if(mouse_b & 1){
+                                somCarregado = 0;
+                                telaAtual = TELA_JOGO;
+                             }
                           }
-                          //fimJogo = verificaSaida(telaAtual);
 
                           break;
 
                      case TELA_JOGO:
                           
-                          //telaAtual = batalhaNaval();
                           if(!inicioJogo){
 
                             // Testa se esse som ja foi carregado
@@ -224,7 +228,7 @@ int main(){
                                somCarregado = 1;
                             }
 
-                            telaAtual = batalhaNaval();
+                            telaAtual = exibeJogo();
                             
                             if(telaAtual == 1){
                                inicioJogo = 1;
@@ -296,12 +300,6 @@ int main(){
         //Exibe posição X e Y do Mouse
         textprintf_ex( buffer, font, 10, 30, makecol(255,0,0), -1, "Mouse X: %d", mouse_x);
         textprintf_ex( buffer, font, 10, 40, makecol(255,0,0), -1, "Mouse Y: %d", mouse_y);
-        textprintf_ex( buffer, font, 10, 50, makecol(255,0,0), -1, "Indice 9 X: %d", getStcPosicaoX(mtxPosicaoPreparacao,9));
-        textprintf_ex( buffer, font, 10, 60, makecol(255,0,0), -1, "Indice 9 Y: %d", getStcPosicaoY(mtxPosicaoPreparacao,9));
-        textprintf_ex( buffer, font, 10, 70, makecol(255,0,0), -1, "Indice 10 X: %d", getStcPosicaoX(mtxPosicaoPreparacao,10));
-        textprintf_ex( buffer, font, 10, 80, makecol(255,0,0), -1, "Indice 10 Y: %d", getStcPosicaoY(mtxPosicaoPreparacao,10));
-        textprintf_ex( buffer, font, 10, 90, makecol(255,0,0), -1, "Indice 11 X: %d", getStcPosicaoX(mtxPosicaoPreparacao,11));
-        textprintf_ex( buffer, font, 10, 100, makecol(255,0,0), -1, "Indice 11 Y: %d", getStcPosicaoY(mtxPosicaoPreparacao,11));
 
 
 
@@ -518,237 +516,11 @@ int exibeInicial(BITMAP *origem, BITMAP *destino){
 ================================================================================
 void exibeJogo
 
-Exibe a tela do jogo e da inicio aos procedimentos necessarios.
-Monta cenario, verifica posicao das embarcacoes do jogador...
+Exibe a tela do jogo e da inicio a batalha.
 
 ================================================================================
 */
-void exibeJogo(){
-
-
-} END_OF_FUNCTION(exibeJogo);
-
-/*
-================================================================================
-void exibeInstrucoes
-
-Exibe a tela de instrucoes do jogo e demonstra ao jogador como jogar.
-
-================================================================================
-*/
-void exibeInstrucoes(BITMAP *origem, BITMAP *destino){
-
-     stcCenario instrucoes;
-     setImagemCenario(&instrucoes, origem);
-     setPosicaoX(&instrucoes, 0);
-     setPosicaoY(&instrucoes, 0);
-     desenhaCenario(destino, instrucoes);
-
-} END_OF_FUNCTION(exibeInstrucoes);
-
-/*
-================================================================================
-void exibeResultado
-
-Exibe a tela de resultado do jogo.
-Se o jogador venceu exibe a tela de parabenizacao, caso contrario exibe a tela
-de derrota.
-
-================================================================================
-*/
-void exibeResultado(int *resultado){
-
-} END_OF_FUNCTION(exibeResultado);
-
-/*
-================================================================================
-void DefinePosicaoGrade
-
-.....
-
-================================================================================
-*/
-void DefinePosicaoGrade(BITMAP *bmp){
-
-     int rgb,
-         xIni = 48,
-         yIni = 180,
-         gradeLinha,
-         gradeColuna;
-
-     rgb = getpixel(bmp, mouse_x, mouse_y);
-     rgb = (rgb * (-1)) - 16777017;
-
-     if( rgb >= 0 && rgb < 200 ){
-
-         textprintf_ex( buffer, font, 10, 50, makecol(255,0,0), -1, " Cor: %i " , rgb);
-
-     }
-
-} END_OF_FUNCTION(DefinePosicaoGrade);
-
-void exibeCarregando(BITMAP *local){
-
-    BITMAP *img = load_bitmap("imagens/estaticos/carregando.png", NULL);
-
-    // Define uma estrutura para o carregando
-    stcCenario carregando;
-    setImagemCenario(&carregando, img);
-    setPosicaoX(&carregando, 0);
-    setPosicaoY(&carregando, 0);
-    desenhaCenario(local, carregando);
-
-}
-
-int verificaSaida(int opcao){
-
-    if(opcao != TELA_SAIR){
-         return 0;
-    }
-    else{
-         return 1;
-    }
-
-
-}
-
-/*
-================================================================================
-void carregaAnimacao
-
-Carrega diversos arquivos PNG para se criar uma animacao.
-As informações necessarias serao passada atraves de parâmetros.
-
-================================================================================
-*/
-void carregaAnimacao(BITMAP *imagem[], char *pasta, int frames){
-
-     int i;
-     char caminho[100];
-
-     for(i=0; i < frames; i++){
-
-       sprintf( caminho, "imagens/%s/%i.png",pasta,i);
-       imagem[i] = load_bitmap(caminho, NULL);
-
-     }
-
-}
-
-
-/*
-================================================================================
-void populaPreparacao
-
- Está função é responsavel por popular a matriz com as posições de X e Y
-e os indices de cada uma das posições de acordo com a imagem do tabuleiro
-da tela de preparação.
-
-================================================================================
-*/
-
-void populaPreparacao(stcPosicao oPosicaoPreparacao[][TAB_DIM]){
-
-int linha  = 0;
-int coluna = 0;
-int ind    = 0;
-
-    // Inicio do loop que varre as linhas
-    for(linha = 0; linha < 10; linha++){
-
-        if(linha != 0 && coluna == 0){
-            ind ++;
-            setStcPosicaoX(oPosicaoPreparacao,oPosicaoPreparacao[linha -1][coluna].posicaoX,linha,coluna);
-            setStcPosicaoY(oPosicaoPreparacao,(oPosicaoPreparacao[linha -1][coluna].posicaoY + 33),linha,coluna);
-            setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
-        }
-
-        // Inicio do loop que varre as colunas
-        for (coluna = 0;coluna < 10; coluna++){
-
-            if(linha == 0 && coluna == 0){
-                setStcPosicaoX(oPosicaoPreparacao, 116, linha, coluna);
-                setStcPosicaoY(oPosicaoPreparacao, 169, linha, coluna);
-                setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
-            }
-            else if(coluna != 0){
-                ind ++;
-                setStcPosicaoX(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoX + 33),linha,coluna);
-                setStcPosicaoY(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoY),linha,coluna);
-                setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
-            }
-
-        }// Fim do loop que varre as colunas
-
-        coluna = 0;
-
-    }// Fim do loop que varre as linhas
-}
-
-
-/*
-================================================================================
-void populaTabuleiroJogo
-
- Está função é responsavel por popular a matriz com as posições de X e Y
-e os indices de cada uma das posições de acordo com a imagem dos tabuleiros
-principais do jogo.
-
-================================================================================
-*/
-
-void populaTabuleiroJogo(stcTabuleiroJogo oTabuleiroJogo[][TAB_DIM]){
-
-int linha  = 0;
-int coluna = 0;
-int ind    = 0;
-
-    // Inicio do loop que varre as linhas
-    for(linha = 0; linha < 10; linha++){
-
-        if(linha != 0 && coluna == 0){
-
-            ind++;
-            setStcTabuleiroJogoX(oTabuleiroJogo,(oTabuleiroJogo[linha -1][coluna].posicaoX + 24),linha,coluna);
-            setStcTabuleiroJogoY(oTabuleiroJogo,(oTabuleiroJogo[linha -1][coluna].posicaoY + 15),linha,coluna);
-            setStcTabuleiroJogoIndice(oTabuleiroJogo,ind,linha,coluna);
-
-        }
-
-        // Inicio do loop que varre as colunas
-        for (coluna = 0;coluna < 10; coluna++){
-            if(linha == 0 && coluna == 0){
-
-                setStcTabuleiroJogoX(oTabuleiroJogo, 48, linha, coluna);
-                setStcTabuleiroJogoY(oTabuleiroJogo, 30, linha, coluna);
-                setStcTabuleiroJogoIndice(oTabuleiroJogo, ind, linha, coluna);
-            }
-            else if(coluna != 0){
-
-                ind ++;
-                setStcTabuleiroJogoX(oTabuleiroJogo,(oTabuleiroJogo[linha][coluna-1].posicaoX + 24),linha,coluna);
-                setStcTabuleiroJogoY(oTabuleiroJogo,(oTabuleiroJogo[linha][coluna-1].posicaoY - 15),linha,coluna);
-                setStcTabuleiroJogoIndice(oTabuleiroJogo, ind, linha, coluna);
-            }
-
-        }// Fim do loop que varre as colunas
-        coluna = 0;
-
-    }// Fim do loop que varre as linhas
-}
-
-
-/*
-================================================================================
-void batalhaNaval
-
-Carrega diversos arquivos PNG para se criar uma animacao.
-As informações necessarias serao passada atraves de parâmetros.
-
-================================================================================
-*/
-
-int batalhaNaval(){
+int exibeJogo(){
 
   /**************************************************************************
   Matriz para controle
@@ -971,7 +743,7 @@ int batalhaNaval(){
           }
 
               // Inicia o som a cada 250 milissegundos
-              if(somLoop == 200){
+              if(somLoop == 250){
                  FMOD_System_Release(fmodAux);
                  rest(250);
                  fmodAux = CarregaSom("sons/_gaivota.mp3", FMOD_LOOP_OFF);
@@ -1018,9 +790,9 @@ int batalhaNaval(){
                    desenhaCenario(buffer,stcItemHoverSair); 
                    
                    if(mouse_b & 1){
+                      clear(buffer);
                       pauseJogo = 0;
                       somCarregado = 0;
-                      clear(buffer);
                       return 0;
                    }         
               } 
@@ -1045,4 +817,213 @@ int batalhaNaval(){
           blit(buffer, screen, 0, 0, 0, 0, JANELA_LARGURA, JANELA_ALTURA);
     }
     return 1;
+
+} END_OF_FUNCTION(exibeJogo);
+
+/*
+================================================================================
+void exibeInstrucoes
+
+Exibe a tela de instrucoes do jogo e demonstra ao jogador como jogar.
+
+================================================================================
+*/
+void exibeInstrucoes(BITMAP *origem, BITMAP *destino){
+
+     stcCenario instrucoes;
+     setImagemCenario(&instrucoes, origem);
+     setPosicaoX(&instrucoes, 0);
+     setPosicaoY(&instrucoes, 0);
+     desenhaCenario(destino, instrucoes);
+
+} END_OF_FUNCTION(exibeInstrucoes);
+
+/*
+================================================================================
+void exibeResultado
+
+Exibe a tela de resultado do jogo.
+Se o jogador venceu exibe a tela de parabenizacao, caso contrario exibe a tela
+de derrota.
+
+================================================================================
+*/
+void exibeResultado(int *resultado){
+
+} END_OF_FUNCTION(exibeResultado);
+
+/*
+================================================================================
+void DefinePosicaoGrade
+
+.....
+
+================================================================================
+*/
+void DefinePosicaoGrade(BITMAP *bmp){
+
+     int rgb,
+         xIni = 48,
+         yIni = 180,
+         gradeLinha,
+         gradeColuna;
+
+     rgb = getpixel(bmp, mouse_x, mouse_y);
+     rgb = (rgb * (-1)) - 16777017;
+
+     if( rgb >= 0 && rgb < 200 ){
+
+         textprintf_ex( buffer, font, 10, 50, makecol(255,0,0), -1, " Cor: %i " , rgb);
+
+     }
+
+} END_OF_FUNCTION(DefinePosicaoGrade);
+
+void exibeCarregando(BITMAP *local){
+
+    BITMAP *img = load_bitmap("imagens/estaticos/carregando.png", NULL);
+
+    // Define uma estrutura para o carregando
+    stcCenario carregando;
+    setImagemCenario(&carregando, img);
+    setPosicaoX(&carregando, 0);
+    setPosicaoY(&carregando, 0);
+    desenhaCenario(local, carregando);
+
+}
+
+int verificaSaida(int opcao){
+
+    if(opcao != TELA_SAIR){
+         return 0;
+    }
+    else{
+         return 1;
+    }
+
+
+}
+
+/*
+================================================================================
+void carregaAnimacao
+
+Carrega diversos arquivos PNG para se criar uma animacao.
+As informações necessarias serao passada atraves de parâmetros.
+
+================================================================================
+*/
+void carregaAnimacao(BITMAP *imagem[], char *pasta, int frames){
+
+     int i;
+     char caminho[100];
+
+     for(i=0; i < frames; i++){
+
+       sprintf( caminho, "imagens/%s/%i.png",pasta,i);
+       imagem[i] = load_bitmap(caminho, NULL);
+
+     }
+}
+
+
+/*
+================================================================================
+void populaPreparacao
+
+ Está função é responsavel por popular a matriz com as posições de X e Y
+e os indices de cada uma das posições de acordo com a imagem do tabuleiro
+da tela de preparação.
+
+================================================================================
+*/
+
+void populaPreparacao(stcPosicao oPosicaoPreparacao[][TAB_DIM]){
+
+int linha  = 0;
+int coluna = 0;
+int ind    = 0;
+
+    // Inicio do loop que varre as linhas
+    for(linha = 0; linha < 10; linha++){
+
+        if(linha != 0 && coluna == 0){
+            ind ++;
+            setStcPosicaoX(oPosicaoPreparacao,oPosicaoPreparacao[linha -1][coluna].posicaoX,linha,coluna);
+            setStcPosicaoY(oPosicaoPreparacao,(oPosicaoPreparacao[linha -1][coluna].posicaoY + 33),linha,coluna);
+            setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
+        }
+
+        // Inicio do loop que varre as colunas
+        for (coluna = 0;coluna < 10; coluna++){
+
+            if(linha == 0 && coluna == 0){
+                setStcPosicaoX(oPosicaoPreparacao, 116, linha, coluna);
+                setStcPosicaoY(oPosicaoPreparacao, 169, linha, coluna);
+                setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
+            }
+            else if(coluna != 0){
+                ind ++;
+                setStcPosicaoX(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoX + 33),linha,coluna);
+                setStcPosicaoY(oPosicaoPreparacao,(oPosicaoPreparacao[linha][coluna-1].posicaoY),linha,coluna);
+                setStcPosicaoIndice(oPosicaoPreparacao, ind, linha, coluna);
+            }
+
+        }// Fim do loop que varre as colunas
+
+        coluna = 0;
+
+    }// Fim do loop que varre as linhas
+}
+
+
+/*
+================================================================================
+void populaTabuleiroJogo
+
+ Está função é responsavel por popular a matriz com as posições de X e Y
+e os indices de cada uma das posições de acordo com a imagem dos tabuleiros
+principais do jogo.
+
+================================================================================
+*/
+
+void populaTabuleiroJogo(stcTabuleiroJogo oTabuleiroJogo[][TAB_DIM]){
+
+int linha  = 0;
+int coluna = 0;
+int ind    = 0;
+
+    // Inicio do loop que varre as linhas
+    for(linha = 0; linha < 10; linha++){
+
+        if(linha != 0 && coluna == 0){
+
+            ind++;
+            setStcTabuleiroJogoX(oTabuleiroJogo,(oTabuleiroJogo[linha -1][coluna].posicaoX + 24),linha,coluna);
+            setStcTabuleiroJogoY(oTabuleiroJogo,(oTabuleiroJogo[linha -1][coluna].posicaoY + 15),linha,coluna);
+            setStcTabuleiroJogoIndice(oTabuleiroJogo,ind,linha,coluna);
+
+        }
+
+        // Inicio do loop que varre as colunas
+        for (coluna = 0;coluna < 10; coluna++){
+            if(linha == 0 && coluna == 0){
+
+                setStcTabuleiroJogoX(oTabuleiroJogo, 48, linha, coluna);
+                setStcTabuleiroJogoY(oTabuleiroJogo, 30, linha, coluna);
+                setStcTabuleiroJogoIndice(oTabuleiroJogo, ind, linha, coluna);
+            }
+            else if(coluna != 0){
+
+                ind ++;
+                setStcTabuleiroJogoX(oTabuleiroJogo,(oTabuleiroJogo[linha][coluna-1].posicaoX + 24),linha,coluna);
+                setStcTabuleiroJogoY(oTabuleiroJogo,(oTabuleiroJogo[linha][coluna-1].posicaoY - 15),linha,coluna);
+                setStcTabuleiroJogoIndice(oTabuleiroJogo, ind, linha, coluna);
+            }
+
+        }// Fim do loop que varre as colunas
+        coluna = 0;
+
+    }// Fim do loop que varre as linhas
 }
