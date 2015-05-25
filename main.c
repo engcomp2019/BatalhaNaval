@@ -61,17 +61,17 @@ void populaTabuleiroJogo( stcTabuleiroJogo oTabuleiroPlayer[][TAB_DIM] );
 void exibeCarregando( BITMAP *local );
 int  exibeMenu( BITMAP *local );
 int  exibeInicial( BITMAP *origem, BITMAP *destino );
-int  exibeJogo( );
+int  exibeJogo();
 void exibeInstrucoes( BITMAP *origem, BITMAP *destino );
 void exibeResultado( int *resultado );
 
 //Função Main
-int main( ){
+int main(){
 
     stcPosicao mtxPosicaoPreparacao[TAB_DIM][TAB_DIM];
     populaPreparacao( mtxPosicaoPreparacao );
 
-    Inicializa( );
+    Inicializa();
 
     // Exibe a mensagem de carregando na tela
     exibeCarregando( screen );
@@ -160,7 +160,7 @@ int main( ){
                              // Inicia o som do cenário
                              FMOD_System_Release( fmodCenario );
                              rest( 250 );
-                             fmodCenario = CarregaSom( "sons/_entrada.mp3", FMOD_LOOP_NORMAL );
+                             //fmodCenario = CarregaSom( "sons/_entrada.mp3", FMOD_LOOP_NORMAL );
                              somCarregado = 1; // Define a flag como som carregado
                           }
 
@@ -232,7 +232,7 @@ int main( ){
                                somCarregado = 1;
                             }
 
-                            telaAtual = exibeJogo( );
+                            telaAtual = exibeJogo();
                             
                             if( telaAtual == 1 ){
                                inicioJogo = 1;
@@ -317,14 +317,14 @@ int main( ){
 
 
     // Executa todas as finalizacoes necessarias
-    Finaliza( );
+    Finaliza();
 
 
   // Encerra
   return 0;
 
 }
-END_OF_MAIN( );
+END_OF_MAIN();
 
 
 /*
@@ -337,15 +337,15 @@ Inicia bibliotecas, realiza verificacoes fundamentais, seta posicoes iniciais...
 ================================================================================
 */
 
-void Inicializa( ) {
+void Inicializa() {
 
-    allegro_init( );
-    alpng_init( );
+    allegro_init();
+    alpng_init();
 
     set_color_depth( PROFUNDIDADE_COR );
 
     if ( PROFUNDIDADE_COR == 32 ){
-        set_alpha_blender( ); // instala o canal alpha
+        set_alpha_blender(); // instala o canal alpha
     }
 
 
@@ -363,9 +363,9 @@ void Inicializa( ) {
 
     }
 
-    install_timer( );
-    install_keyboard( );
-    install_mouse( );
+    install_timer();
+    install_keyboard();
+    install_mouse();
 
     LOCK_VARIABLE( velocidade );
     LOCK_FUNCTION( VelocidadeJogo );
@@ -394,18 +394,18 @@ Realiza o procedimento de limpeza para finalizar o jogo.
 ================================================================================
 */
 
-void Finaliza( ){
+void Finaliza(){
 
     // Finaliza todas as comunicações com a porta serial.
-    //finalizaTodasPortasSeriais( );
+    //finalizaTodasPortasSeriais();
 
-     clear_keybuf( );
+     clear_keybuf();
      destroy_bitmap( buffer );
-     remove_timer( );
-     remove_mouse( );
-     remove_sound( );
-     remove_keyboard( );
-     allegro_exit( );
+     remove_timer();
+     remove_mouse();
+     remove_sound();
+     remove_keyboard();
+     allegro_exit();
 }
 
 /*
@@ -417,7 +417,7 @@ Incrementa o contador da velocidade do jogo.
 ================================================================================
 */
 
-void VelocidadeJogo( ) {
+void VelocidadeJogo() {
      velocidade++;
 }END_OF_FUNCTION( VelocidadeJogo );
 
@@ -430,7 +430,7 @@ Executada uma vez por segundo para atualizar o contador de frames por segundo.
 ================================================================================
 */
 
-void CalculaFPS( ) {
+void CalculaFPS() {
      totalFps = frames;
      frames = 0;
 } END_OF_FUNCTION( CalculaFPS );
@@ -524,7 +524,7 @@ Exibe a tela do jogo e da inicio a batalha.
 
 ================================================================================
 */
-int exibeJogo( ){
+int exibeJogo(){
 
   /**************************************************************************
   Matriz para controle
@@ -695,7 +695,7 @@ int exibeJogo( ){
   stcCenario stcNavioTamanho3aVP2;
   setImagemCenario( &stcNavioTamanho3aVP2, bmpNavioTamanho3aVP2 );
   setPosicaoX( &stcNavioTamanho3aVP2, getStcTabuleiroJogoX( stcTabuleiroAdversario, P2_NAVIO3AV ) );
-  setPosicaoY( &stcNavioTamanho3aVP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO3AV ) );
+          setPosicaoY( &stcNavioTamanho3aVP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO3AV ) );
 
   BITMAP *bmpNavioTamanho3bVP2      = load_bitmap( "imagens/sprites/barco/normal/navio3bV_P2.png", NULL );
   stcCenario stcNavioTamanho3bVP2;
@@ -717,7 +717,7 @@ int exibeJogo( ){
   BITMAP *bmpCursorMouseAtaque    = load_bitmap( "imagens/estaticos/mouseAtaque.png", NULL );
   stcCenario stcCursorMouseAtaque;
   setImagemCenario( &stcCursorMouseAtaque, bmpCursorMouseAtaque );
-
+  
   // Variaveis de controle do movimento da água
   int aguaMovimentoX     = 0, 
       aguaMovimentoFator = 7, 
@@ -725,7 +725,7 @@ int exibeJogo( ){
       aguaMovimentoMax   = ( 38 * aguaMovimentoFator ), 
       flagMaxX           = 0;
 
-  int posicaoGrade;
+  int tipoMouse, posicaoGrade;
 
     while( !fimJogo ){
       
@@ -779,8 +779,7 @@ int exibeJogo( ){
           desenhaCenario( buffer, stcNavioTamanho4VP2 );
           desenhaCenario( buffer, stcRodapeOpcoes );
 
-          textprintf_ex( buffer, font, 10, 10, makecol( 255, 0, 0 ), -1, "Mouse X: %d", mouse_x );
-          textprintf_ex( buffer, font, 10, 20, makecol( 255, 0, 0 ), -1, "Mouse Y: %d", mouse_y );
+          
 
           // Área do botão Menu
           if( mouse_b & 1 && ( mouse_x >= 671 && mouse_x <= 777 ) && ( mouse_y >= 544 && mouse_y <= 574 ) ){
@@ -789,10 +788,20 @@ int exibeJogo( ){
 
           posicaoGrade = definePosicaoGrade( bmpGradeTabuleiroCores );
           
+          // Desenha na tela o cursor do mouse
+          if( posicaoGrade >= 100 && posicaoGrade <= 199 ){
+             tipoMouse = 1;
+          }
+          else{
+             tipoMouse = 0;
+          }
+
           // Após clicar no botão Menu, será exibido um alerta.
           if( pauseJogo ){
+
              desenhaCenario( buffer, stcMenuSair ); 
-             
+             tipoMouse = 0;
+
               // Opção Sim - Volta para o menu inicial
               if( ( mouse_x >= 334 && mouse_x <= 379 ) && ( mouse_y >= 303 && mouse_y <= 333 ) ){
                    setPosicaoX( &stcItemHoverSair, 312 );
@@ -821,14 +830,14 @@ int exibeJogo( ){
                     
 
           somLoop++;
-
-          // Desenha na tela o cursor do mouse
-          if( posicaoGrade >= 100 && posicaoGrade <= 199 ){
-             draw_trans_sprite( buffer, bmpCursorMouseAtaque, mouse_x, mouse_y );
-          }
-          else{
+          
+          if(tipoMouse == 0){
              draw_trans_sprite( buffer, bmpCursorMouse, mouse_x, mouse_y );
           }
+          else{
+             draw_trans_sprite( buffer, bmpCursorMouseAtaque, mouse_x, mouse_y );  
+          }
+          
           // Desenha na tela tudo que foi inserido no buffer.
           blit( buffer, screen, 0, 0, 0, 0, JANELA_LARGURA, JANELA_ALTURA );
     }
