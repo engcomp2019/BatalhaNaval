@@ -1,12 +1,12 @@
 /***********************************************************
 *                                                          *
-*    PROJETO APC 2 - JOGO DE BATALHA NAVAL COM ARDUINO       *
+*    PROJETO APC 2 - JOGO DE BATALHA NAVAL COM ARDUINO     *
 *                                                          *
-* Nome: Andre Queiroz                         RA: 27619994874   *
-* Nome: Raiany Araujo                         RA: 02055024230   *
-* Nome: Rodrigo Sene                           RA:  42108819886  *
+* Nome: Andre Queiroz                    RA: 27619994874   *
+* Nome: Raiany Araujo                    RA: 02055024230   *
+* Nome: Rodrigo Sene                     RA:  42108819886  *
 * Data de Inicio: 28/02/2015                               *
-* Data Final: 25/05/2015                                     *
+* Data Final: 25/05/2015                                   *
 ************************************************************/
 
 // Bibliotecas (Arquivos de Cabecalho)
@@ -45,18 +45,20 @@ volatile int velocidade = 0;    // Recebe o valor incremental da velocidade do j
 volatile int totalFps   = 0;     // Recebe o total de frames por segundo (calculado apenas uma vez a cada segundo).
 volatile int frames     = 0;     // Recebe a quantidade de frames por segundo (incrementado a cada volta do loop principal ).
 
-// Protï¿½tipos das funï¿½ï¿½es
+// Prototipos das funcos
 void Inicializa();
 void Finaliza();
 void VelocidadeJogo();
 void CalculaFPS();
 
-int definePosicaoGrade( BITMAP *bmp );
+int  definePosicaoGrade( BITMAP *bmp );
 void carregaAnimacao( BITMAP *imagem[], char *pasta, int frames );
 int  verificaSaida( int opcao );
 
 void populaPreparacao( stcPosicao oPosicaoPreparacao[][TAB_DIM] );
 void populaTabuleiroJogo( stcTabuleiroJogo oTabuleiroPlayer[][TAB_DIM] );
+int  preparaTabuleiroAdversario( stcTabuleiroJogo oTabuleiroAdversario[][TAB_DIM], int indice, int direcao, int tamanhoNavio );
+void populaTabuleiroAdversario( stcTabuleiroJogo oTabuleiroAdversario[][TAB_DIM] );
 
 void exibeCarregando( BITMAP *local );
 int  exibeMenu( BITMAP *local );
@@ -65,7 +67,7 @@ int  exibeJogo();
 void exibeInstrucoes( BITMAP *origem, BITMAP *destino );
 void exibeResultado( int *resultado );
 
-//Funï¿½ï¿½o Main
+//Funcao Main
 int main(){
 
     stcPosicao mtxPosicaoPreparacao[TAB_DIM][TAB_DIM];
@@ -76,7 +78,7 @@ int main(){
     // Exibe a mensagem de carregando na tela
     exibeCarregando( screen );
 
-    // Inicializaï¿½ï¿½o dos cenï¿½rios
+    // Inicializacao dos cenarios
     BITMAP *telaIntro = load_bitmap( "imagens/estaticos/intro.png", NULL );
     stcCenario intro;
     setImagemCenario( &intro, telaIntro );
@@ -93,7 +95,7 @@ int main(){
 
     BITMAP *bmpCursorMouse  = load_bitmap( "imagens/estaticos/mouse.png", NULL );
 
-    //Navios da tela de preparaï¿½ï¿½o
+    //Navios da tela de preparacao
     BITMAP *bmpNavioTamanho2H       = load_bitmap( "imagens/estaticos/n2-h.png", NULL );
     stcCenario stcNavioTamanho2H;
     setImagemCenario( &stcNavioTamanho2H, bmpNavioTamanho2H );
@@ -155,9 +157,9 @@ int main(){
 
                      case TELA_INICIO:
 
-                          // Testa se esse som jï¿½ foi carregado
+                          // Testa se esse som ja foi carregado
                           if( !somCarregado ){
-                             // Inicia o som do cenï¿½rio
+                             // Inicia o som do cenario
                              FMOD_System_Release( fmodCenario );
                              rest( 250 );
                              //fmodCenario = CarregaSom( "sons/_entrada.mp3", FMOD_LOOP_NORMAL );
@@ -173,7 +175,7 @@ int main(){
 
                           // Testa se esse som ja foi carregado
                           if( !somCarregado ){
-                             // Inicia o som do cenï¿½rio
+                             // Inicia o som do cenario
                              FMOD_System_Release( fmodCenario );
                              rest( 250 );
                              fmodCenario = CarregaSom( "sons/_preparar.mp3", FMOD_LOOP_OFF );
@@ -192,14 +194,14 @@ int main(){
                           desenhaCenario( buffer, stcNavioTamanho2V );
 
 
-                          // Botï¿½o Voltar
+                          // Botao Voltar
                           if( mouse_b & 1 && ( mouse_x >= 0 && mouse_x <= 80 ) && ( mouse_y >= 517 && mouse_y <= 550 ) ){
                              somCarregado = 0;        // Define a flag como som descarregado
                              telaAtual = TELA_INICIO; // Define a tela atual com valor da tela de inicio
-                          }// Botï¿½o Iniciar
+                          }// Botao Iniciar
                           else if( ( mouse_x >= 395 && mouse_x <= 490 ) && ( mouse_y >= 520 && mouse_y <= 548 ) ){
                              
-                             // Altera a imagem do botï¿½o iniciar quando passar o cursor do mouse em cima
+                             // Altera a imagem do Botao iniciar quando passar o cursor do mouse em cima
                              BITMAP *iniHover = load_bitmap( "imagens/estaticos/btn-iniciar.png", NULL );
                              stcCenario iniciar;
                              setImagemCenario( &iniciar, iniHover );
@@ -207,7 +209,7 @@ int main(){
                              setPosicaoY( &iniciar, 516 );
                              desenhaCenario( buffer, iniciar );
                              
-                             // Inicia o jogo ao clicar sobre o botï¿½o
+                             // Inicia o jogo ao clicar sobre o Botao
                              if( mouse_b & 1 ){
 
                                 somCarregado = 0;       // Define a flag como som descarregado
@@ -225,7 +227,7 @@ int main(){
                             // Testa se esse som ja foi carregado
                             if( !somCarregado ){
 
-                               // Inicia o som do cenï¿½rio
+                               // Inicia o som do cenario
                                FMOD_System_Release( fmodCenario );
                                rest( 250 );
                                fmodCenario = CarregaSom( "sons/_oceano2.mp3", FMOD_LOOP_NORMAL );                               
@@ -263,7 +265,7 @@ int main(){
 
                           // Testa se esse som ja foi carregado
                           if( !somCarregado ){
-                             // Inicia o som do cenï¿½rio
+                             // Inicia o som do cenario
                              FMOD_System_Release( fmodCenario );
                              rest( 250 );
                              fmodCenario = CarregaSom( "sons/_preparar.mp3", FMOD_LOOP_OFF );
@@ -380,7 +382,7 @@ void Inicializa() {
     // Define um titulo para a janela
     set_window_title( "Batalha Naval - The Arduino Game" );
 
-    // Inicia a comunicaï¿½ï¿½o com a porta serial desejada.
+    // Inicia a comunicacao com a porta serial desejada.
     //inicializaSerial( 0, "COM3", 9600 );
 
 }
@@ -396,7 +398,7 @@ Realiza o procedimento de limpeza para finalizar o jogo.
 
 void Finaliza(){
 
-    // Finaliza todas as comunicaï¿½ï¿½es com a porta serial.
+    // Finaliza todas as comunicacoes com a porta serial.
     //finalizaTodasPortasSeriais();
 
      clear_keybuf();
@@ -507,8 +509,8 @@ int exibeMenu( BITMAP *local ){
 ================================================================================
 void exibeInicial
 
-Exibe a tela inicial do jogo com as opï¿½ï¿½es possï¿½veis.
-Jogar, Como Jogar e Sair
+Exibe a tela inicial do jogo com as opcoes possiveis.
+Jogar e Sair
 
 ================================================================================
 */
@@ -532,18 +534,16 @@ int exibeJogo(){
   stcTabuleiroJogo mtxTabuleiroPlayer[TAB_DIM][TAB_DIM];
   stcTabuleiroJogo mtxTabuleiroAdversario[TAB_DIM][TAB_DIM];
 
-
-
   populaTabuleiroJogo( mtxTabuleiroPlayer );
-  populaTabuleiroJogo( mtxTabuleiroAdversario );
+  populaTabuleiroAdversario( mtxTabuleiroAdversario );
 
   /**************************************************************************
-  Iniciando Bitmaps estï¿½ticos do cenï¿½rio
+  Iniciando Bitmaps estaticos do cenario
   ***************************************************************************/
 
   clear( buffer );
 
-  // ï¿½gua 
+  // Agua 
   BITMAP *bmpFundoAgua     = load_bitmap( "imagens/estaticos/agua.png", NULL );
   stcCenario stcFundoAgua;
   setImagemCenario( &stcFundoAgua, bmpFundoAgua );
@@ -554,7 +554,7 @@ int exibeJogo(){
   stcCenario stcMoveAgua;
   setImagemCenario( &stcMoveAgua, bmpMoveAgua );
 
-  // Rodapï¿½
+  // Rodape
   BITMAP *bmpRodapeOpcoes  = load_bitmap( "imagens/estaticos/rodape.png", NULL );
   stcCenario stcRodapeOpcoes;
   setImagemCenario( &stcRodapeOpcoes, bmpRodapeOpcoes );
@@ -671,7 +671,7 @@ int exibeJogo(){
   stcCenario stcCursorMouseAtaque;
   setImagemCenario( &stcCursorMouseAtaque, bmpCursorMouseAtaque );
   
-  // Variaveis de controle do movimento da ï¿½gua
+  // Variaveis de controle do movimento da agua
   int aguaMovimentoX     = 0, 
       aguaMovimentoFator = 7, 
       aguaMovimentoMin   = 0, 
@@ -682,7 +682,7 @@ int exibeJogo(){
 
     while( !fimJogo ){
       
-          // Controle de movimento da ï¿½gua
+          // Controle de movimento da agua
           if( aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0 ){
               if( aguaMovimentoX == aguaMovimentoMax ){
                   flagMaxX = 1;
@@ -705,13 +705,13 @@ int exibeJogo(){
              somLoop = 0;
           }
 
-          // Insere o tabuleiro de cores para controle de posiï¿½ï¿½o no cenï¿½rio
+          // Insere o tabuleiro de cores para controle de posicao no cenario
           desenhaCenario( buffer, stcGradeTabuleiroCores );          
 
-          // Insere a ï¿½gua de fundo no cenï¿½rio 
+          // Insere a agua de fundo no cenario 
           desenhaCenario( buffer, stcFundoAgua );
 
-          // Insere a ï¿½gua em movimento no cenï¿½rio
+          // Insere a agua em movimento no cenario
           setPosicaoX( &stcMoveAgua, -( aguaMovimentoX / aguaMovimentoFator ) );
           desenhaCenario( buffer, stcMoveAgua );
           
@@ -726,15 +726,15 @@ int exibeJogo(){
           desenhaCenario( buffer, stcNavioTamanho4HP1 );
 
           //Desenha Navios 
-          desenhaCenario( buffer, stcNavioTamanho2HP2 );
+          /*desenhaCenario( buffer, stcNavioTamanho2HP2 );
           desenhaCenario( buffer, stcNavioTamanho3aVP2 );
           desenhaCenario( buffer, stcNavioTamanho3bHP2 );
-          desenhaCenario( buffer, stcNavioTamanho4VP2 );
+          desenhaCenario( buffer, stcNavioTamanho4VP2 );*/
           desenhaCenario( buffer, stcRodapeOpcoes );
 
           
 
-          // ï¿½rea do botï¿½o Menu
+          // Area do botao Menu
           if( mouse_b & 1 && ( mouse_x >= 671 && mouse_x <= 777 ) && ( mouse_y >= 544 && mouse_y <= 574 ) ){
               pauseJogo = 1;
           }
@@ -749,13 +749,13 @@ int exibeJogo(){
              tipoMouse = 0;
           }
 
-          // Apï¿½s clicar no botï¿½o Menu, serï¿½ exibido um alerta.
+          // Apos clicar no botao Menu, sera exibido um alerta.
           if( pauseJogo ){
 
              desenhaCenario( buffer, stcMenuSair ); 
              tipoMouse = 0;
 
-              // Opï¿½ï¿½o Sim - Volta para o menu inicial
+              // Opcao Sim - Volta para o menu inicial
               if( ( mouse_x >= 334 && mouse_x <= 379 ) && ( mouse_y >= 303 && mouse_y <= 333 ) ){
                    setPosicaoX( &stcItemHoverSair, 312 );
                    setPosicaoY( &stcItemHoverSair, 312 );  
@@ -768,7 +768,7 @@ int exibeJogo(){
                       return 0;
                    }         
               } 
-              // Opï¿½ï¿½o Nï¿½o - Volta para o jogo
+              // Opcao Nao - Volta para o jogo
               else if( ( mouse_x >= 432 && mouse_x <= 477 ) && ( mouse_y >= 303 && mouse_y <= 333 ) ){
                    setPosicaoX( &stcItemHoverSair, 411 );
                    setPosicaoY( &stcItemHoverSair, 312 );  
@@ -843,7 +843,7 @@ int definePosicaoGrade( BITMAP *bmp ){
      int posicao, 
          rgb;
      
-     // Recebe o valor do RGB da localizaï¿½ï¿½o do mouse na imagem definida.
+     // Recebe o valor do RGB da localizacao do mouse na imagem definida.
      rgb = getpixel( bmp, mouse_x, mouse_y );
 
      // Recebe o valor de rgb e transforma em um valor que vai de 0 a 199
@@ -862,7 +862,7 @@ Popula a matrix que cuida do tabuleiro adversario.
 
 ================================================================================
 */
-void populaTabuleiroAdversario(){
+void populaTabuleiroAdversario( stcTabuleiroJogo oTabuleiroAdversario[][TAB_DIM] ){
 
 
   int TamanhoNavio[4];
@@ -872,22 +872,23 @@ void populaTabuleiroAdversario(){
       rFator       = 11,
       rCalc        = 0,
       rLinha       = 0,
-      rColuna      = 0;
+      rColuna      = 0,
+      i;
 
   TamanhoNavio[0] = 2;
   TamanhoNavio[1] = 3;
   TamanhoNavio[2] = 3;
   TamanhoNavio[3] = 4;
 
-  for(i = 0; i < qtdNavios; i ++){
+  for( i = 0; i < qtdNavios; i++ ){
 
-    while(flagIndice){
+    while( flagIndice ){
 
       direcao = rand() % 2;
 
       rCalc = (rFator - TamanhoNavio[i]);
 
-      switch(direcao){
+      switch( direcao ){
          
          case 0:
               rLinha = rand()%rFator;
@@ -901,7 +902,7 @@ void populaTabuleiroAdversario(){
 
       }
 
-      if(preparaTabuleiroAdversario(mtxTabuleiroAdversario[rLinha][rColuna].indice, direcao, tipoNavio[i]))
+      if( preparaTabuleiroAdversario( oTabuleiroAdversario, oTabuleiroAdversario[rLinha][rColuna].indice, direcao, TamanhoNavio[i] ) )
         flagIndice = 0;
     }
   }
@@ -912,14 +913,14 @@ void populaTabuleiroAdversario(){
 ================================================================================
 void preparaTabuleiroAdversario
 
-Prepara o tabuleiro adversï¿½rio, esta funï¿½ï¿½o seta o campo temNavio da matriz 
-para as posiï¿½ï¿½es de acordo com o tamanho e direï¿½ï¿½o que o navio deve ser posicio-
-nado, caso nï¿½o consiga setar o campo por algum motivo, retorna zero, caso conclua 
+Prepara o tabuleiro adversario, esta funcao seta o campo temNavio da matriz 
+para as posicoes de acordo com o tamanho e direááo que o navio deve ser posicio-
+nado, caso nao consiga setar o campo por algum motivo, retorna zero, caso conclua 
 o processo sem erros retorna um.
 ================================================================================
 */
-int preparaTabuleiroAdversario(int indice, int direcao, int tamanhoNavio ){
-//variaivel posiï¿½ï¿½o igual a 1 Vertical, igual a zero Horizontal. 
+int preparaTabuleiroAdversario( stcTabuleiroJogo oTabuleiroAdversario[][TAB_DIM], int indice, int direcao, int tamanhoNavio ){
+//variavel posicao igual a 1 - Vertical, igual a zero - Horizontal. 
   int linha  = TAB_DIM,
       coluna = TAB_DIM,
       i;
@@ -927,25 +928,25 @@ int preparaTabuleiroAdversario(int indice, int direcao, int tamanhoNavio ){
   for(linha = 0; linha < TAB_DIM; linha++){
     for(coluna = 0; coluna < TAB_DIM; coluna++ ){
 
-      if(mtxTabuleiroAdversario.indice == indice){
+      if(oTabuleiroAdversario.indice == indice){
 
-        if(mtxTabuleiroAdversario.temNavio == 0){
+        if(oTabuleiroAdversario.temNavio == 0){
 
           if(direcao == 1){
 
-            for (i = 0; i < tamanhoNavio, i ++){
+            for (i = 0; i < tamanhoNavio; i ++){
 
-              if(mtxTabuleiroAdversario[linha][coluna + i].temNavio == 0)
-                mtxTabuleiroAdversario[linha][coluna + i].temNavio = 1;
+              if(oTabuleiroAdversario[linha][coluna + i].temNavio == 0)
+                oTabuleiroAdversario[linha][coluna + i].temNavio = 1;
               else
                 return  0;
             }
             return 1;
           }
           else{
-            for (i = 0; i < tamanhoNavio, i ++ ){
-              if(mtxTabuleiroAdversario[linha + i][coluna].temNavio == 0)
-                mtxTabuleiroAdversario[linha + i][coluna].temNavio = 1;
+            for (i = 0; i < tamanhoNavio; i ++ ){
+              if(oTabuleiroAdversario[linha + i][coluna].temNavio == 0)
+                oTabuleiroAdversario[linha + i][coluna].temNavio = 1;
               else
                 return 0;
             }
@@ -993,7 +994,7 @@ int verificaSaida( int opcao ){
 void carregaAnimacao
 
 Carrega diversos arquivos PNG para se criar uma animacao.
-As informaï¿½ï¿½es necessarias serao passada atraves de parï¿½metros.
+As informacoes necessarias serao passada atraves de parametros.
 
 ================================================================================
 */
@@ -1015,9 +1016,9 @@ void carregaAnimacao( BITMAP *imagem[], char *pasta, int frames ){
 ================================================================================
 void populaPreparacao
 
- Estï¿½ funï¿½ï¿½o ï¿½ responsavel por popular a matriz com as posiï¿½ï¿½es de X e Y
-e os indices de cada uma das posiï¿½ï¿½es de acordo com a imagem do tabuleiro
-da tela de preparaï¿½ï¿½o.
+ Esta funcao á responsavel por popular a matriz com as posiááes de X e Y
+e os indices de cada uma das posicoes de acordo com a imagem do tabuleiro
+da tela de preparacao.
 
 ================================================================================
 */
@@ -1065,8 +1066,8 @@ int ind    = 0;
 ================================================================================
 void populaTabuleiroJogo
 
- Estï¿½ funï¿½ï¿½o ï¿½ responsavel por popular a matriz com as posiï¿½ï¿½es de X e Y
-e os indices de cada uma das posiï¿½ï¿½es de acordo com a imagem dos tabuleiros
+ Esta funcao á responsavel por popular a matriz com as posiááes de X e Y
+e os indices de cada uma das posicoes de acordo com a imagem dos tabuleiros
 principais do jogo.
 
 ================================================================================
