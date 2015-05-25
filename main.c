@@ -1,12 +1,12 @@
 /***********************************************************
 *                                                          *
-*    PROJETO APC 2 - JOGO DE BATALHA NAVAL COM ARDUINO 			 *
+*    PROJETO APC 2 - JOGO DE BATALHA NAVAL COM ARDUINO       *
 *                                                          *
-* Nome: Andre Queiroz					                RA:	27619994874		*
-* Nome: Raiany Araujo					                RA:	02055024230		*
-* Nome: Rodrigo Sene					                 RA:	42108819886	 *
+* Nome: Andre Queiroz                         RA: 27619994874   *
+* Nome: Raiany Araujo                         RA: 02055024230   *
+* Nome: Rodrigo Sene                           RA:  42108819886  *
 * Data de Inicio: 28/02/2015                               *
-* Data Final: 25/05/2015		                                 *
+* Data Final: 25/05/2015                                     *
 ************************************************************/
 
 // Bibliotecas (Arquivos de Cabecalho)
@@ -42,10 +42,10 @@ int somLoop        = 0;
 
 
 volatile int velocidade = 0;    // Recebe o valor incremental da velocidade do jogo.
-volatile int totalFps   = 0;	   // Recebe o total de frames por segundo (calculado apenas uma vez a cada segundo).
-volatile int frames     = 0;	   // Recebe a quantidade de frames por segundo (incrementado a cada volta do loop principal ).
+volatile int totalFps   = 0;     // Recebe o total de frames por segundo (calculado apenas uma vez a cada segundo).
+volatile int frames     = 0;     // Recebe a quantidade de frames por segundo (incrementado a cada volta do loop principal ).
 
-// Protótipos das funções
+// Protï¿½tipos das funï¿½ï¿½es
 void Inicializa();
 void Finaliza();
 void VelocidadeJogo();
@@ -65,7 +65,7 @@ int  exibeJogo();
 void exibeInstrucoes( BITMAP *origem, BITMAP *destino );
 void exibeResultado( int *resultado );
 
-//Função Main
+//Funï¿½ï¿½o Main
 int main(){
 
     stcPosicao mtxPosicaoPreparacao[TAB_DIM][TAB_DIM];
@@ -76,7 +76,7 @@ int main(){
     // Exibe a mensagem de carregando na tela
     exibeCarregando( screen );
 
-    // Inicialização dos cenários
+    // Inicializaï¿½ï¿½o dos cenï¿½rios
     BITMAP *telaIntro = load_bitmap( "imagens/estaticos/intro.png", NULL );
     stcCenario intro;
     setImagemCenario( &intro, telaIntro );
@@ -93,7 +93,7 @@ int main(){
 
     BITMAP *bmpCursorMouse  = load_bitmap( "imagens/estaticos/mouse.png", NULL );
 
-    //Navios da tela de preparação
+    //Navios da tela de preparaï¿½ï¿½o
     BITMAP *bmpNavioTamanho2H       = load_bitmap( "imagens/estaticos/n2-h.png", NULL );
     stcCenario stcNavioTamanho2H;
     setImagemCenario( &stcNavioTamanho2H, bmpNavioTamanho2H );
@@ -155,9 +155,9 @@ int main(){
 
                      case TELA_INICIO:
 
-                          // Testa se esse som já foi carregado
+                          // Testa se esse som jï¿½ foi carregado
                           if( !somCarregado ){
-                             // Inicia o som do cenário
+                             // Inicia o som do cenï¿½rio
                              FMOD_System_Release( fmodCenario );
                              rest( 250 );
                              //fmodCenario = CarregaSom( "sons/_entrada.mp3", FMOD_LOOP_NORMAL );
@@ -173,7 +173,7 @@ int main(){
 
                           // Testa se esse som ja foi carregado
                           if( !somCarregado ){
-                             // Inicia o som do cenário
+                             // Inicia o som do cenï¿½rio
                              FMOD_System_Release( fmodCenario );
                              rest( 250 );
                              fmodCenario = CarregaSom( "sons/_preparar.mp3", FMOD_LOOP_OFF );
@@ -192,14 +192,14 @@ int main(){
                           desenhaCenario( buffer, stcNavioTamanho2V );
 
 
-                          // Botão Voltar
+                          // Botï¿½o Voltar
                           if( mouse_b & 1 && ( mouse_x >= 0 && mouse_x <= 80 ) && ( mouse_y >= 517 && mouse_y <= 550 ) ){
                              somCarregado = 0;        // Define a flag como som descarregado
                              telaAtual = TELA_INICIO; // Define a tela atual com valor da tela de inicio
-                          }// Botão Iniciar
+                          }// Botï¿½o Iniciar
                           else if( ( mouse_x >= 395 && mouse_x <= 490 ) && ( mouse_y >= 520 && mouse_y <= 548 ) ){
                              
-                             // Altera a imagem do botão iniciar quando passar o cursor do mouse em cima
+                             // Altera a imagem do botï¿½o iniciar quando passar o cursor do mouse em cima
                              BITMAP *iniHover = load_bitmap( "imagens/estaticos/btn-iniciar.png", NULL );
                              stcCenario iniciar;
                              setImagemCenario( &iniciar, iniHover );
@@ -207,7 +207,7 @@ int main(){
                              setPosicaoY( &iniciar, 516 );
                              desenhaCenario( buffer, iniciar );
                              
-                             // Inicia o jogo ao clicar sobre o botão
+                             // Inicia o jogo ao clicar sobre o botï¿½o
                              if( mouse_b & 1 ){
 
                                 somCarregado = 0;       // Define a flag como som descarregado
@@ -225,7 +225,7 @@ int main(){
                             // Testa se esse som ja foi carregado
                             if( !somCarregado ){
 
-                               // Inicia o som do cenário
+                               // Inicia o som do cenï¿½rio
                                FMOD_System_Release( fmodCenario );
                                rest( 250 );
                                fmodCenario = CarregaSom( "sons/_oceano2.mp3", FMOD_LOOP_NORMAL );                               
@@ -263,7 +263,7 @@ int main(){
 
                           // Testa se esse som ja foi carregado
                           if( !somCarregado ){
-                             // Inicia o som do cenário
+                             // Inicia o som do cenï¿½rio
                              FMOD_System_Release( fmodCenario );
                              rest( 250 );
                              fmodCenario = CarregaSom( "sons/_preparar.mp3", FMOD_LOOP_OFF );
@@ -301,7 +301,7 @@ int main(){
         // Exibe o contador de frames na tela
         textprintf_ex( buffer, font, 10, 10, makecol( 255, 0, 0 ), -1, "FPS: %i " , totalFps );
 
-        //Exibe posição X e Y do Mouse
+        //Exibe posiï¿½ï¿½o X e Y do Mouse
         textprintf_ex( buffer, font, 10, 30, makecol( 255, 0, 0 ), -1, "Mouse X: %d", mouse_x );
         textprintf_ex( buffer, font, 10, 40, makecol( 255, 0, 0 ), -1, "Mouse Y: %d", mouse_y );
 
@@ -380,7 +380,7 @@ void Inicializa() {
     // Define um titulo para a janela
     set_window_title( "Batalha Naval - The Arduino Game" );
 
-    // Inicia a comunicação com a porta serial desejada.
+    // Inicia a comunicaï¿½ï¿½o com a porta serial desejada.
     //inicializaSerial( 0, "COM3", 9600 );
 
 }
@@ -396,7 +396,7 @@ Realiza o procedimento de limpeza para finalizar o jogo.
 
 void Finaliza(){
 
-    // Finaliza todas as comunicações com a porta serial.
+    // Finaliza todas as comunicaï¿½ï¿½es com a porta serial.
     //finalizaTodasPortasSeriais();
 
      clear_keybuf();
@@ -507,7 +507,7 @@ int exibeMenu( BITMAP *local ){
 ================================================================================
 void exibeInicial
 
-Exibe a tela inicial do jogo com as opções possíveis.
+Exibe a tela inicial do jogo com as opï¿½ï¿½es possï¿½veis.
 Jogar, Como Jogar e Sair
 
 ================================================================================
@@ -518,7 +518,7 @@ int exibeInicial( BITMAP *origem, BITMAP *destino ){
 
 /*
 ================================================================================
-void exibeJogo
+int exibeJogo
 
 Exibe a tela do jogo e da inicio a batalha.
 
@@ -529,19 +529,21 @@ int exibeJogo(){
   /**************************************************************************
   Matriz para controle
   ***************************************************************************/
-  stcTabuleiroJogo stcTabuleiroPlayer[TAB_DIM][TAB_DIM];
-  stcTabuleiroJogo stcTabuleiroAdversario[TAB_DIM][TAB_DIM];
+  stcTabuleiroJogo mtxTabuleiroPlayer[TAB_DIM][TAB_DIM];
+  stcTabuleiroJogo mtxTabuleiroAdversario[TAB_DIM][TAB_DIM];
 
-  populaTabuleiroJogo( stcTabuleiroPlayer );
-  populaTabuleiroJogo( stcTabuleiroAdversario );
+
+
+  populaTabuleiroJogo( mtxTabuleiroPlayer );
+  populaTabuleiroJogo( mtxTabuleiroAdversario );
 
   /**************************************************************************
-  Iniciando Bitmaps estáticos do cenário
+  Iniciando Bitmaps estï¿½ticos do cenï¿½rio
   ***************************************************************************/
 
   clear( buffer );
 
-  // Água 
+  // ï¿½gua 
   BITMAP *bmpFundoAgua     = load_bitmap( "imagens/estaticos/agua.png", NULL );
   stcCenario stcFundoAgua;
   setImagemCenario( &stcFundoAgua, bmpFundoAgua );
@@ -552,7 +554,7 @@ int exibeJogo(){
   stcCenario stcMoveAgua;
   setImagemCenario( &stcMoveAgua, bmpMoveAgua );
 
-  // Rodapé
+  // Rodapï¿½
   BITMAP *bmpRodapeOpcoes  = load_bitmap( "imagens/estaticos/rodape.png", NULL );
   stcCenario stcRodapeOpcoes;
   setImagemCenario( &stcRodapeOpcoes, bmpRodapeOpcoes );
@@ -612,102 +614,53 @@ int exibeJogo(){
   BITMAP *bpmNavioTamanho2HP1       = load_bitmap( "imagens/sprites/barco/normal/navio2H_P1.png", NULL );
   stcCenario stcNavioTamanho2HP1;
   setImagemCenario( &stcNavioTamanho2HP1, bpmNavioTamanho2HP1 );
-  setPosicaoX( &stcNavioTamanho2HP1, getStcTabuleiroJogoX( stcTabuleiroPlayer, P1_NAVIO2H ) );
-  setPosicaoY( &stcNavioTamanho2HP1, getStcTabuleiroJogoY( stcTabuleiroPlayer, P1_NAVIO2H ) );
+  setPosicaoX( &stcNavioTamanho2HP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO2H ) );
+  setPosicaoY( &stcNavioTamanho2HP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO2H ) );
 
   BITMAP *bpmNavioTamanho3aHP1       = load_bitmap( "imagens/sprites/barco/normal/navio3aH_P1.png", NULL );
   stcCenario stcNavioTamanho3aHP1;
   setImagemCenario( &stcNavioTamanho3aHP1, bpmNavioTamanho3aHP1 );
-  setPosicaoX( &stcNavioTamanho3aHP1, getStcTabuleiroJogoX( stcTabuleiroPlayer, P1_NAVIO3AH ) );
-  setPosicaoY( &stcNavioTamanho3aHP1, getStcTabuleiroJogoY( stcTabuleiroPlayer, P1_NAVIO3AH ) );
+  setPosicaoX( &stcNavioTamanho3aHP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO3AH ) );
+  setPosicaoY( &stcNavioTamanho3aHP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO3AH ) );
 
   BITMAP *bpmNavioTamanho3bHP1       = load_bitmap( "imagens/sprites/barco/normal/navio3bH_P1.png", NULL );
   stcCenario stcNavioTamanho3bHP1;
   setImagemCenario( &stcNavioTamanho3bHP1, bpmNavioTamanho3bHP1 );
-  setPosicaoX( &stcNavioTamanho3bHP1, getStcTabuleiroJogoX( stcTabuleiroPlayer, P1_NAVIO3BH ) );
-  setPosicaoY( &stcNavioTamanho3bHP1, getStcTabuleiroJogoY( stcTabuleiroPlayer, P1_NAVIO3BH ) );
+  setPosicaoX( &stcNavioTamanho3bHP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO3BH ) );
+  setPosicaoY( &stcNavioTamanho3bHP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO3BH ) );
 
   BITMAP *bpmNavioTamanho4HP1       = load_bitmap( "imagens/sprites/barco/normal/navio4H_P1.png", NULL );
   stcCenario stcNavioTamanho4HP1;
   setImagemCenario( &stcNavioTamanho4HP1, bpmNavioTamanho4HP1 );
-  setPosicaoX( &stcNavioTamanho4HP1, getStcTabuleiroJogoX( stcTabuleiroPlayer, P1_NAVIO4H ) );
-  setPosicaoY( &stcNavioTamanho4HP1, getStcTabuleiroJogoY( stcTabuleiroPlayer, P1_NAVIO4H ) );
-
-  // Navios Adversário - Horizontal
-  BITMAP *bpmNavioTamanho2HP2       = load_bitmap( "imagens/sprites/barco/normal/navio2H_P2.png", NULL );
-  stcCenario stcNavioTamanho2HP2;
-  setImagemCenario( &stcNavioTamanho2HP2, bpmNavioTamanho2HP2 );
-  setPosicaoX( &stcNavioTamanho2HP2, getStcTabuleiroJogoX( stcTabuleiroAdversario, P2_NAVIO2H ) );
-  setPosicaoY( &stcNavioTamanho2HP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO2H ) );
-
-  BITMAP *bpmNavioTamanho3aHP2       = load_bitmap( "imagens/sprites/barco/normal/navio3aH_P2.png", NULL );
-  stcCenario stcNavioTamanho3aHP2;
-  setImagemCenario( &stcNavioTamanho3aHP2, bpmNavioTamanho3aHP2 );
-  setPosicaoX( &stcNavioTamanho3aHP2, getStcTabuleiroJogoX( stcTabuleiroAdversario, P2_NAVIO3AH ) );
-  setPosicaoY( &stcNavioTamanho3aHP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO3AH ) );
-
-  BITMAP *bpmNavioTamanho3bHP2       = load_bitmap( "imagens/sprites/barco/normal/navio3bH_P2.png", NULL );
-  stcCenario stcNavioTamanho3bHP2;
-  setImagemCenario( &stcNavioTamanho3bHP2, bpmNavioTamanho3bHP2 );
-  setPosicaoX( &stcNavioTamanho3bHP2, getStcTabuleiroJogoX( stcTabuleiroAdversario, P2_NAVIO3BH ) );
-  setPosicaoY( &stcNavioTamanho3bHP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO3BH ) );
-
-  BITMAP *bpmNavioTamanho4HP2       = load_bitmap( "imagens/sprites/barco/normal/navio4H_P2.png", NULL );
-  stcCenario stcNavioTamanho4HP2;
-  setImagemCenario( &stcNavioTamanho4HP2, bpmNavioTamanho4HP2 );
-  setPosicaoX( &stcNavioTamanho4HP2, getStcTabuleiroJogoX( stcTabuleiroAdversario, P2_NAVIO4H ) );
-  setPosicaoY( &stcNavioTamanho4HP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO4H ) );
+  setPosicaoX( &stcNavioTamanho4HP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO4H ) );
+  setPosicaoY( &stcNavioTamanho4HP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO4H ) );
 
 
   // Navios Jogador - Vertical
   BITMAP *bmpNavioTamanho2VP1       = load_bitmap( "imagens/sprites/barco/normal/navio2V_P1.png", NULL );
   stcCenario stcNavioTamanho2VP1;
   setImagemCenario( &stcNavioTamanho2VP1, bmpNavioTamanho2VP1 );
-  setPosicaoX( &stcNavioTamanho2VP1, getStcTabuleiroJogoX( stcTabuleiroPlayer, P1_NAVIO2V ) );
-  setPosicaoY( &stcNavioTamanho2VP1, getStcTabuleiroJogoY( stcTabuleiroPlayer, P1_NAVIO2V ) );
+  setPosicaoX( &stcNavioTamanho2VP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO2V ) );
+  setPosicaoY( &stcNavioTamanho2VP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO2V ) );
 
   BITMAP *bmpNavioTamanho3aVP1      = load_bitmap( "imagens/sprites/barco/normal/navio3aV_P1.png", NULL );
   stcCenario stcNavioTamanho3aVP1;
   setImagemCenario( &stcNavioTamanho3aVP1, bmpNavioTamanho3aVP1 );
-  setPosicaoX( &stcNavioTamanho3aVP1, getStcTabuleiroJogoX( stcTabuleiroPlayer, P1_NAVIO3AV ) );
-  setPosicaoY( &stcNavioTamanho3aVP1, getStcTabuleiroJogoY( stcTabuleiroPlayer, P1_NAVIO3AV ) );
+  setPosicaoX( &stcNavioTamanho3aVP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO3AV ) );
+  setPosicaoY( &stcNavioTamanho3aVP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO3AV ) );
 
   BITMAP *bmpNavioTamanho3bVP1      = load_bitmap( "imagens/sprites/barco/normal/navio3bV_P1.png", NULL );
   stcCenario stcNavioTamanho3bVP1;
   setImagemCenario( &stcNavioTamanho3bVP1, bmpNavioTamanho3bVP1 );
-  setPosicaoX( &stcNavioTamanho3bVP1, getStcTabuleiroJogoX( stcTabuleiroPlayer, P1_NAVIO3BV ) );
-  setPosicaoY( &stcNavioTamanho3bVP1, getStcTabuleiroJogoY( stcTabuleiroPlayer, P1_NAVIO3BV ) );
+  setPosicaoX( &stcNavioTamanho3bVP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO3BV ) );
+  setPosicaoY( &stcNavioTamanho3bVP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO3BV ) );
 
   BITMAP *bmpNavioTamanho4VP1       = load_bitmap( "imagens/sprites/barco/normal/navio4V_P1.png", NULL );
   stcCenario stcNavioTamanho4VP1;
   setImagemCenario( &stcNavioTamanho4VP1, bmpNavioTamanho4VP1 );
-  setPosicaoX( &stcNavioTamanho4VP1, getStcTabuleiroJogoX( stcTabuleiroPlayer, P1_NAVIO4V ) );
-  setPosicaoY( &stcNavioTamanho4VP1, getStcTabuleiroJogoY( stcTabuleiroPlayer, P1_NAVIO4V ) );
+  setPosicaoX( &stcNavioTamanho4VP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO4V ) );
+  setPosicaoY( &stcNavioTamanho4VP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO4V ) );
 
-  // Navios Adversário - Vertical
-  BITMAP *bmpNavioTamanho2VP2       = load_bitmap( "imagens/sprites/barco/normal/navio2V_P2.png", NULL );
-  stcCenario stcNavioTamanho2VP2;
-  setImagemCenario( &stcNavioTamanho2VP2, bmpNavioTamanho2VP2 );
-  setPosicaoX( &stcNavioTamanho2VP2, getStcTabuleiroJogoX( stcTabuleiroAdversario, P2_NAVIO2V ) );
-  setPosicaoY( &stcNavioTamanho2VP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO2V ) );
-
-  BITMAP *bmpNavioTamanho3aVP2      = load_bitmap( "imagens/sprites/barco/normal/navio3aV_P2.png", NULL );
-  stcCenario stcNavioTamanho3aVP2;
-  setImagemCenario( &stcNavioTamanho3aVP2, bmpNavioTamanho3aVP2 );
-  setPosicaoX( &stcNavioTamanho3aVP2, getStcTabuleiroJogoX( stcTabuleiroAdversario, P2_NAVIO3AV ) );
-          setPosicaoY( &stcNavioTamanho3aVP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO3AV ) );
-
-  BITMAP *bmpNavioTamanho3bVP2      = load_bitmap( "imagens/sprites/barco/normal/navio3bV_P2.png", NULL );
-  stcCenario stcNavioTamanho3bVP2;
-  setImagemCenario( &stcNavioTamanho3bVP2, bmpNavioTamanho3bVP2 );
-  setPosicaoX( &stcNavioTamanho3bVP2, getStcTabuleiroJogoX( stcTabuleiroAdversario, P2_NAVIO3BV ) );
-  setPosicaoY( &stcNavioTamanho3bVP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO3BV ) );
-
-  BITMAP *bmpNavioTamanho4VP2       = load_bitmap( "imagens/sprites/barco/normal/navio4V_P2.png", NULL );
-  stcCenario stcNavioTamanho4VP2;
-  setImagemCenario( &stcNavioTamanho4VP2, bmpNavioTamanho4VP2 );
-  setPosicaoX( &stcNavioTamanho4VP2, getStcTabuleiroJogoX( stcTabuleiroAdversario, P2_NAVIO4V ) );
-  setPosicaoY( &stcNavioTamanho4VP2, getStcTabuleiroJogoY( stcTabuleiroAdversario, P2_NAVIO4V ) );
 
   //Mouse
   BITMAP *bmpCursorMouse          = load_bitmap( "imagens/estaticos/mouse.png", NULL );
@@ -718,7 +671,7 @@ int exibeJogo(){
   stcCenario stcCursorMouseAtaque;
   setImagemCenario( &stcCursorMouseAtaque, bmpCursorMouseAtaque );
   
-  // Variaveis de controle do movimento da água
+  // Variaveis de controle do movimento da ï¿½gua
   int aguaMovimentoX     = 0, 
       aguaMovimentoFator = 7, 
       aguaMovimentoMin   = 0, 
@@ -729,7 +682,7 @@ int exibeJogo(){
 
     while( !fimJogo ){
       
-          // Controle de movimento da água
+          // Controle de movimento da ï¿½gua
           if( aguaMovimentoX <= aguaMovimentoMax && flagMaxX == 0 ){
               if( aguaMovimentoX == aguaMovimentoMax ){
                   flagMaxX = 1;
@@ -752,13 +705,13 @@ int exibeJogo(){
              somLoop = 0;
           }
 
-          // Insere o tabuleiro de cores para controle de posição no cenário
+          // Insere o tabuleiro de cores para controle de posiï¿½ï¿½o no cenï¿½rio
           desenhaCenario( buffer, stcGradeTabuleiroCores );          
 
-          // Insere a água de fundo no cenário 
+          // Insere a ï¿½gua de fundo no cenï¿½rio 
           desenhaCenario( buffer, stcFundoAgua );
 
-          // Insere a água em movimento no cenário
+          // Insere a ï¿½gua em movimento no cenï¿½rio
           setPosicaoX( &stcMoveAgua, -( aguaMovimentoX / aguaMovimentoFator ) );
           desenhaCenario( buffer, stcMoveAgua );
           
@@ -781,7 +734,7 @@ int exibeJogo(){
 
           
 
-          // Área do botão Menu
+          // ï¿½rea do botï¿½o Menu
           if( mouse_b & 1 && ( mouse_x >= 671 && mouse_x <= 777 ) && ( mouse_y >= 544 && mouse_y <= 574 ) ){
               pauseJogo = 1;
           }
@@ -796,13 +749,13 @@ int exibeJogo(){
              tipoMouse = 0;
           }
 
-          // Após clicar no botão Menu, será exibido um alerta.
+          // Apï¿½s clicar no botï¿½o Menu, serï¿½ exibido um alerta.
           if( pauseJogo ){
 
              desenhaCenario( buffer, stcMenuSair ); 
              tipoMouse = 0;
 
-              // Opção Sim - Volta para o menu inicial
+              // Opï¿½ï¿½o Sim - Volta para o menu inicial
               if( ( mouse_x >= 334 && mouse_x <= 379 ) && ( mouse_y >= 303 && mouse_y <= 333 ) ){
                    setPosicaoX( &stcItemHoverSair, 312 );
                    setPosicaoY( &stcItemHoverSair, 312 );  
@@ -815,7 +768,7 @@ int exibeJogo(){
                       return 0;
                    }         
               } 
-              // Opção Não - Volta para o jogo
+              // Opï¿½ï¿½o Nï¿½o - Volta para o jogo
               else if( ( mouse_x >= 432 && mouse_x <= 477 ) && ( mouse_y >= 303 && mouse_y <= 333 ) ){
                    setPosicaoX( &stcItemHoverSair, 411 );
                    setPosicaoY( &stcItemHoverSair, 312 );  
@@ -888,25 +841,126 @@ void definePosicaoGrade
 int definePosicaoGrade( BITMAP *bmp ){
 
      int posicao, 
-         rgb, 
-         xIni = 48, 
-         yIni = 180, 
-         gradeLinha, 
-         gradeColuna;
+         rgb;
      
-     // Recebe o valor do RGB da localização do mouse na imagem definida.
+     // Recebe o valor do RGB da localizaï¿½ï¿½o do mouse na imagem definida.
      rgb = getpixel( bmp, mouse_x, mouse_y );
 
      // Recebe o valor de rgb e transforma em um valor que vai de 0 a 199
      posicao = ( rgb * ( -1 ) ) - 16777017;
      
-     // Exibe o valor na tela da posição atual
-     if( posicao >= 0 && posicao <= 199 )
-     textprintf_ex( buffer, font, 10, 50, makecol( 255, 0, 0 ), -1, " Posicao: %i " , posicao );
-
      return posicao;
 
 } END_OF_FUNCTION( definePosicaoGrade );
+
+
+/*
+================================================================================
+void populaTabuleiroAdversario
+
+Popula a matrix que cuida do tabuleiro adversario.
+
+================================================================================
+*/
+void populaTabuleiroAdversario(){
+
+
+  int TamanhoNavio[4];
+  int qtdNavios    = 4,
+      flagIndice   = 1,
+      direcao      = 0,
+      rFator       = 11,
+      rCalc        = 0,
+      rLinha       = 0,
+      rColuna      = 0;
+
+  TamanhoNavio[0] = 2;
+  TamanhoNavio[1] = 3;
+  TamanhoNavio[2] = 3;
+  TamanhoNavio[3] = 4;
+
+  for(i = 0; i < qtdNavios; i ++){
+
+    while(flagIndice){
+
+      direcao = rand() % 2;
+
+      rCalc = (rFator - TamanhoNavio[i]);
+
+      switch(direcao){
+         
+         case 0:
+              rLinha = rand()%rFator;
+              rColuna = rand()%rCalc;
+            break;
+       
+         case 1:
+              rLinha = rand()%rCalc;
+              rColuna = rand()%rFator;
+              break;
+
+      }
+
+      if(preparaTabuleiroAdversario(mtxTabuleiroAdversario[rLinha][rColuna].indice, direcao, tipoNavio[i]))
+        flagIndice = 0;
+    }
+  }
+
+}
+
+/*
+================================================================================
+void preparaTabuleiroAdversario
+
+Prepara o tabuleiro adversï¿½rio, esta funï¿½ï¿½o seta o campo temNavio da matriz 
+para as posiï¿½ï¿½es de acordo com o tamanho e direï¿½ï¿½o que o navio deve ser posicio-
+nado, caso nï¿½o consiga setar o campo por algum motivo, retorna zero, caso conclua 
+o processo sem erros retorna um.
+================================================================================
+*/
+int preparaTabuleiroAdversario(int indice, int direcao, int tamanhoNavio ){
+//variaivel posiï¿½ï¿½o igual a 1 Vertical, igual a zero Horizontal. 
+  int linha  = TAB_DIM,
+      coluna = TAB_DIM,
+      i;
+
+  for(linha = 0; linha < TAB_DIM; linha++){
+    for(coluna = 0; coluna < TAB_DIM; coluna++ ){
+
+      if(mtxTabuleiroAdversario.indice == indice){
+
+        if(mtxTabuleiroAdversario.temNavio == 0){
+
+          if(direcao == 1){
+
+            for (i = 0; i < tamanhoNavio, i ++){
+
+              if(mtxTabuleiroAdversario[linha][coluna + i].temNavio == 0)
+                mtxTabuleiroAdversario[linha][coluna + i].temNavio = 1;
+              else
+                return  0;
+            }
+            return 1;
+          }
+          else{
+            for (i = 0; i < tamanhoNavio, i ++ ){
+              if(mtxTabuleiroAdversario[linha + i][coluna].temNavio == 0)
+                mtxTabuleiroAdversario[linha + i][coluna].temNavio = 1;
+              else
+                return 0;
+            }
+            return 1;
+          }
+        }
+        else
+          return 0;
+      }
+    }
+  }
+}
+
+}END_OF_FUNCTION(preparaTabuleiroAdversario);
+
 
 void exibeCarregando( BITMAP *local ){
 
@@ -920,6 +974,7 @@ void exibeCarregando( BITMAP *local ){
     desenhaCenario( local, carregando );
 
 }
+
 
 int verificaSaida( int opcao ){
 
@@ -938,7 +993,7 @@ int verificaSaida( int opcao ){
 void carregaAnimacao
 
 Carrega diversos arquivos PNG para se criar uma animacao.
-As informações necessarias serao passada atraves de parâmetros.
+As informaï¿½ï¿½es necessarias serao passada atraves de parï¿½metros.
 
 ================================================================================
 */
@@ -960,9 +1015,9 @@ void carregaAnimacao( BITMAP *imagem[], char *pasta, int frames ){
 ================================================================================
 void populaPreparacao
 
- Está função é responsavel por popular a matriz com as posições de X e Y
-e os indices de cada uma das posições de acordo com a imagem do tabuleiro
-da tela de preparação.
+ Estï¿½ funï¿½ï¿½o ï¿½ responsavel por popular a matriz com as posiï¿½ï¿½es de X e Y
+e os indices de cada uma das posiï¿½ï¿½es de acordo com a imagem do tabuleiro
+da tela de preparaï¿½ï¿½o.
 
 ================================================================================
 */
@@ -1010,8 +1065,8 @@ int ind    = 0;
 ================================================================================
 void populaTabuleiroJogo
 
- Está função é responsavel por popular a matriz com as posições de X e Y
-e os indices de cada uma das posições de acordo com a imagem dos tabuleiros
+ Estï¿½ funï¿½ï¿½o ï¿½ responsavel por popular a matriz com as posiï¿½ï¿½es de X e Y
+e os indices de cada uma das posiï¿½ï¿½es de acordo com a imagem dos tabuleiros
 principais do jogo.
 
 ================================================================================
