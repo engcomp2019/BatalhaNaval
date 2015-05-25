@@ -14,10 +14,14 @@
 ******************************************************************************/
 typedef struct{
 
-    int indice,
+    int xCentro,
+        yCentro,
+        indice,
         posicaoX,
         posicaoY,
-        tipoNavio;
+        tipoNavio,
+        destruido,
+        temNavio;
 
 }stcTabuleiroJogo;
 
