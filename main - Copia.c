@@ -27,11 +27,7 @@
 //#include "arduino.h"
 
 // Variaveis Globais
-BITMAP *buffer;
-BITMAP *animaExplosao[FPS_EXPLOSAO];
-BITMAP *animaFogo[FPS_FOGO];
-BITMAP *animaTiroAgua[FPS_TIRO_AGUA];
-
+BITMAP  *buffer;
 FMOD_SYSTEM *fmodCenario = 0;
 FMOD_SYSTEM *fmodAux = 0;
 FMOD_SYSTEM *fmodMenu = 0;
@@ -641,7 +637,7 @@ int exibeJogo(){
   setPosicaoX( &stcNavioTamanho4HP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO4H ) );
   setPosicaoY( &stcNavioTamanho4HP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO4H ) );
 
-  /*// Navios Adversário - Horizontal
+  // Navios Adversário - Horizontal
   BITMAP *bpmNavioTamanho2HP2       = load_bitmap( "imagens/sprites/barco/normal/navio2H_P2.png", NULL );
   stcCenario stcNavioTamanho2HP2;
   setImagemCenario( &stcNavioTamanho2HP2, bpmNavioTamanho2HP2 );
@@ -664,7 +660,7 @@ int exibeJogo(){
   stcCenario stcNavioTamanho4HP2;
   setImagemCenario( &stcNavioTamanho4HP2, bpmNavioTamanho4HP2 );
   setPosicaoX( &stcNavioTamanho4HP2, getStcTabuleiroJogoX( mtxTabuleiroAdversario, P2_NAVIO4H ) );
-  setPosicaoY( &stcNavioTamanho4HP2, getStcTabuleiroJogoY( mtxTabuleiroAdversario, P2_NAVIO4H ) );*/
+  setPosicaoY( &stcNavioTamanho4HP2, getStcTabuleiroJogoY( mtxTabuleiroAdversario, P2_NAVIO4H ) );
 
 
   // Navios Jogador - Vertical
@@ -692,7 +688,7 @@ int exibeJogo(){
   setPosicaoX( &stcNavioTamanho4VP1, getStcTabuleiroJogoX( mtxTabuleiroPlayer, P1_NAVIO4V ) );
   setPosicaoY( &stcNavioTamanho4VP1, getStcTabuleiroJogoY( mtxTabuleiroPlayer, P1_NAVIO4V ) );
 
-  /*// Navios Adversário - Vertical
+  // Navios Adversário - Vertical
   BITMAP *bmpNavioTamanho2VP2       = load_bitmap( "imagens/sprites/barco/normal/navio2V_P2.png", NULL );
   stcCenario stcNavioTamanho2VP2;
   setImagemCenario( &stcNavioTamanho2VP2, bmpNavioTamanho2VP2 );
@@ -715,7 +711,7 @@ int exibeJogo(){
   stcCenario stcNavioTamanho4VP2;
   setImagemCenario( &stcNavioTamanho4VP2, bmpNavioTamanho4VP2 );
   setPosicaoX( &stcNavioTamanho4VP2, getStcTabuleiroJogoX( mtxTabuleiroAdversario, P2_NAVIO4V ) );
-  setPosicaoY( &stcNavioTamanho4VP2, getStcTabuleiroJogoY( mtxTabuleiroAdversario, P2_NAVIO4V ) );*/
+  setPosicaoY( &stcNavioTamanho4VP2, getStcTabuleiroJogoY( mtxTabuleiroAdversario, P2_NAVIO4V ) );
 
   //Mouse
   BITMAP *bmpCursorMouse          = load_bitmap( "imagens/estaticos/mouse.png", NULL );
@@ -775,15 +771,35 @@ int exibeJogo(){
           desenhaCenario( buffer, stcIlhaSuperiorDireita );
           desenhaCenario( buffer, stcIlhaInferiorEsquerda );
           desenhaCenario( buffer, stcIlhaInferiorDireita );
-          
-          
           desenhaCenario( buffer, stcNavioTamanho2VP1 );
           desenhaCenario( buffer, stcNavioTamanho3aHP1 );
           desenhaCenario( buffer, stcNavioTamanho3bVP1 );
           desenhaCenario( buffer, stcNavioTamanho4HP1 );
 
+          //Desenha Navios 
+          desenhaCenario( buffer, stcNavioTamanho2HP2 );
+          desenhaCenario( buffer, stcNavioTamanho3aVP2 );
+          desenhaCenario( buffer, stcNavioTamanho3bHP2 );
+          desenhaCenario( buffer, stcNavioTamanho4VP2 );
           desenhaCenario( buffer, stcRodapeOpcoes );
- 
+          
+          int i, j, total = 0, quebraX = 10, quebraY = 40;
+          
+          for(i = 0; i < 10 ; i ++){
+            for(j = 0; j < 10; j ++){
+             total = (i * 10) + j;
+             
+             quebraY = quebraY + 10;
+              textprintf_ex( buffer, font, quebraX, quebraY, makecol( 255, 0, 0 ), -1, " %i - %i", total, mtxTabuleiroAdversario[i][j].temNavio );
+            }
+
+            if(total > 40){
+                quebraX = quebraX + 100;
+                quebraY = 40;
+             }
+          }
+
+
           // Área do botão Menu
           if( mouse_b & 1 && ( mouse_x >= 671 && mouse_x <= 777 ) && ( mouse_y >= 544 && mouse_y <= 574 ) ){
               pauseJogo = 1;
@@ -792,32 +808,8 @@ int exibeJogo(){
           posicaoGrade = definePosicaoGrade( bmpGradeTabuleiroCores );
           
           // Desenha na tela o cursor do mouse
-          if( (posicaoGrade >= 100 && posicaoGrade <= 199) ){
+          if( posicaoGrade >= 100 && posicaoGrade <= 199 ){
              tipoMouse = 1;
-
-             int l, c, ind = 0, yPos = 10;
-          
-             for( l = 0; l < 10 ; l++ ){
-             
-                for( c = 0; c < 10; c++ ){
-                    
-                    ind = (100 + ( l * 10) + c);
-
-                    if( mouse_b & 1 && posicaoGrade == ind){
-                        
-                        if( mtxTabuleiroAdversario[l][c].temNavio ){
-                            carregaAnimacao(animaExplosao, "sprites/explosao", FPS_EXPLOSAO);
-                            //textprintf_ex( buffer, font, 10, 20, makecol( 255, 0, 0 ), -1, " Navio" );
-                        }
-                        else{
-                             carregaAnimacao(animaTiroAgua, "sprites/explosao", FPS_TIRO_AGUA);
-                             //textprintf_ex( buffer, font, 10, 20, makecol( 255, 0, 0 ), -1, " Agua" );
-                        }
-
-                    }
-                }
-             }
-
           }
           else{
              tipoMouse = 0;
@@ -1111,22 +1103,19 @@ int preparaTabuleiroAdversario(int indice, int direcao, int tamanhoNavio ){
 
             for (i = 0; i < tamanhoNavio; i ++){
 
-              if(mtxTabuleiroAdversario[linha + i][coluna].temNavio == 0)
-                mtxTabuleiroAdversario[linha + i][coluna].temNavio = 1;
+              if(mtxTabuleiroAdversario[linha][coluna + i].temNavio == 0)
+                mtxTabuleiroAdversario[linha][coluna + i].temNavio = 1;
               else
-                return 0;
-
+                return  0;
             }
             return 1;
           }
           else{
             for (i = 0; i < tamanhoNavio; i ++ ){
-
-              if(mtxTabuleiroAdversario[linha][coluna + i].temNavio == 0)
-                mtxTabuleiroAdversario[linha][coluna + i].temNavio = 1;
+              if(mtxTabuleiroAdversario[linha + i][coluna].temNavio == 0)
+                mtxTabuleiroAdversario[linha + i][coluna].temNavio = 1;
               else
-                return  0;
-
+                return 0;
             }
             return 1;
           }
@@ -1150,7 +1139,7 @@ Popula a matrix que cuida do tabuleiro adversario.
 void populaTabuleiroAdversario(){
 
 
-  /*int TamanhoNavio[4];
+  int TamanhoNavio[4];
   int qtdNavios    = 4,
       flagIndice   = 1,
       direcao      = 0,
@@ -1190,24 +1179,7 @@ void populaTabuleiroAdversario(){
       if(preparaTabuleiroAdversario(mtxTabuleiroAdversario[rLinha][rColuna].indice, direcao, TamanhoNavio[i]))
         flagIndice = 0;
     }
-  }*/
-
-
-  mtxTabuleiroAdversario[0][0].temNavio = 1;
-  mtxTabuleiroAdversario[0][1].temNavio = 1;
-
-  mtxTabuleiroAdversario[6][4].temNavio = 1;
-  mtxTabuleiroAdversario[7][4].temNavio = 1;
-  mtxTabuleiroAdversario[8][4].temNavio = 1;
-
-  mtxTabuleiroAdversario[9][3].temNavio = 1;
-  mtxTabuleiroAdversario[9][4].temNavio = 1;
-  mtxTabuleiroAdversario[9][5].temNavio = 1;
-
-  mtxTabuleiroAdversario[3][2].temNavio = 1;
-  mtxTabuleiroAdversario[4][2].temNavio = 1;
-  mtxTabuleiroAdversario[5][2].temNavio = 1;
-  mtxTabuleiroAdversario[6][2].temNavio = 1;
+  }
 
 }
 

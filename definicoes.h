@@ -9,6 +9,9 @@
 #define GFX_MODO GFX_AUTODETECT_WINDOWED
 
 #define FPS_MAXIMO 60
+#define FPS_EXPLOSAO 41
+#define FPS_FOGO 26
+#define FPS_TIRO_AGUA 41
 
 // Define das telas do jogo
 #define TELA_INICIO 0
@@ -31,16 +34,6 @@
 #define P1_NAVIO3AV 21
 #define P1_NAVIO3BV 45
 #define P1_NAVIO4V  60
-
-#define P2_NAVIO2H  05
-#define P2_NAVIO3AH 21
-#define P2_NAVIO3BH 35
-#define P2_NAVIO4H  80
-
-#define P2_NAVIO2V  8
-#define P2_NAVIO3AV 21
-#define P2_NAVIO3BV 45
-#define P2_NAVIO4V  60
 
 //Portas Arduino
 #define VELOCIDADEPORTA 9600
